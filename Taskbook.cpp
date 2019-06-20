@@ -5,50 +5,27 @@
 #include <vector>
 #include <math.h>
 #include <numeric>
+#include <fstream>
+#include <experimental/filesystem>
 #include "Taskbook.h"
 #include "Operations.h"
 #include "FileOperations.h"
+#include "ArchiveFileOperations.h"
+#include <experimental/filesystem>
 using namespace std;
 
-int Taskbook::undoneCount;
-int Taskbook::inprogress;
-int Taskbook::note;
-int Taskbook::doneCount;
-int Taskbook::size;
 static bool print = true;
-
-void Taskbook::CountVector()
-{
-    undoneCount = 0;
-    inprogress = 0;
-    note = 0;
-    doneCount = 0;
-    size = Operations::Tasks.size();
-    for (int i = 0; i < size; i++)
-    {
-        if (Operations::Tasks[i].stat == TaskStat_Enum::done)
-        {
-            doneCount++;
-        }
-        else if (Operations::Tasks[i].stat == TaskStat_Enum::undone)
-        {
-            undoneCount++;
-        }
-        else if (Operations::Tasks[i].stat == TaskStat_Enum::note)
-        {
-            note++;
-        }
-        else if (Operations::Tasks[i].stat == TaskStat_Enum::inprogress)
-        {
-            inprogress++;
-        }
-    }
-}
 
 void Taskbook::ManageTaskbook()
 {
     FileOperations::ReadFromFile();
-    CountVector();
+    ArchiveFileOperations::ReadArchive();
+    ifstream f(ArchiveFileOperations::ArchivePath.c_str());
+    if (!f.good())
+    {
+        ofstream file(ArchiveFileOperations::ArchivePath);
+    }
+    Print::CountVector();
 
     while (true)
     {
@@ -57,14 +34,18 @@ void Taskbook::ManageTaskbook()
 
         if (print)
         {
-            PrintTasks();
+            Print::PrintTasks();
         }
 
         cout << "Taskbook: ";
         getline(cin, input);
+        input = Trim(input);
 
         if (input == "exit")
             return;
+
+        if (input == "clear")
+            Operations::Clear();
 
         print = true;
         inputPair = ParseInput(input);
@@ -73,44 +54,6 @@ void Taskbook::ManageTaskbook()
             ManageCommand(inputPair);
         }
     }
-}
-
-void Taskbook::PrintTasks()
-{
-    int percent = 0;
-    if (size > 0)
-    {
-        percent = ((doneCount * 100) / size);
-    }
-    cout << " ♥ My Board [" << doneCount << "/" << size << "]" << endl;
-    for (int i = 0; i < size; i++)
-    {
-        if (Operations::Tasks[i].stat == TaskStat_Enum::done)
-        {
-            cout << "    " << Operations::Tasks[i].number << "."
-                 << " ✔  " << Operations::Tasks[i].name << endl;
-        }
-        else if (Operations::Tasks[i].stat == TaskStat_Enum::undone)
-        {
-            cout << "    " << Operations::Tasks[i].number << "."
-                 << " ☐  " << Operations::Tasks[i].name << endl;
-        }
-        else if (Operations::Tasks[i].stat == TaskStat_Enum::note)
-        {
-            cout << "    " << Operations::Tasks[i].number << "."
-                 << " ★  " << Operations::Tasks[i].name << endl;
-        }
-        else if (Operations::Tasks[i].stat == TaskStat_Enum::inprogress)
-        {
-            cout << "    " << Operations::Tasks[i].number << "."
-                 << " ⋯  " << Operations::Tasks[i].name << endl;
-        }
-    }
-    cout << "\n " << percent << "% of all tasks completed\n";
-    cout << " " << doneCount << " done • " << inprogress << " in-progress • ";
-    cout << undoneCount << " pending"
-         << " • " << note << " notes\n"
-         << endl;
 }
 
 void Taskbook::ManageCommand(const std::pair<Op_Enum, std::string> &inputPair)
@@ -147,6 +90,21 @@ void Taskbook::ManageCommand(const std::pair<Op_Enum, std::string> &inputPair)
         print = false;
         break;
 
+    case Op_Enum::archive:
+        Print::PrintArchive();
+        print = false;
+        break;
+
+    case Op_Enum::find:
+        makeOperation.Find(inputPair.second);
+        print = false;
+        break;
+
+    case Op_Enum::restore:
+        makeOperation.Restore(inputPair.second);
+        print = false;
+        break;
+
     default:
         return;
     }
@@ -154,7 +112,7 @@ void Taskbook::ManageCommand(const std::pair<Op_Enum, std::string> &inputPair)
 
 std::pair<Op_Enum, std::string> Taskbook::ParseInput(string inputstr)
 {
-    inputstr = Trim(inputstr);
+    inputstr = inputstr;
     Op_Enum operationName;
     string parsed;
     string shortcut;
@@ -195,6 +153,15 @@ std::pair<Op_Enum, std::string> Taskbook::ParseInput(string inputstr)
 
     else if (shortcut == "-h" || shortcut == "--help")
         operationName = Op_Enum::help;
+
+    else if (shortcut == "-f" || shortcut == "--find")
+        operationName = Op_Enum::find;
+
+    else if (shortcut == "-a" || shortcut == "--archive")
+        operationName = Op_Enum::archive;
+
+    else if (shortcut == "-r" || shortcut == "--restore")
+        operationName = Op_Enum::restore;
 
     else
         operationName = Op_Enum::Nil;

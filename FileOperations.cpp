@@ -1,13 +1,13 @@
 #include <iostream>
-#include "FileOperations.h"
 #include <fstream>
 #include <vector>
 #include <string>
+#include "FileOperations.h"
 #include "Operations.h"
 using namespace std;
 const std::string FileOperations::dataPath = "/home/mert/.taskbook/data.txt";
 
-std::string ReturnStr(TaskStat_Enum stat)
+std::string FileOperations::ReturnStr(TaskStat_Enum stat)
 {
     if (stat == TaskStat_Enum::done)
     {

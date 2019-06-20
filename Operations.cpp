@@ -1,13 +1,16 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <fstream>
 #include <algorithm>
 #include "Operations.h"
 #include "FileOperations.h"
+#include "ArchiveFileOperations.h"
 #include "Taskbook.h"
 using namespace std;
 
 std::vector<Task> Operations::Tasks;
+std::vector<Task> Operations::ArchiveTasks;
 
 int Operations::GetNewNum()
 {
@@ -18,6 +21,48 @@ int Operations::GetNewNum()
         num = Tasks[size - 1].number + 1;
     }
     return num;
+}
+int Operations::GetNewNumArchive()
+{
+    int size = ArchiveTasks.size();
+    int num = 1;
+    if (size >= 1)
+    {
+        num = ArchiveTasks[size - 1].number + 1;
+    }
+    return num;
+}
+
+void Operations::SendToArchive(Task deletedTask)
+{
+    deletedTask.number = GetNewNumArchive();
+    ArchiveTasks.push_back(deletedTask);
+    ArchiveFileOperations::WriteArchive();
+}
+
+void Operations::Restore(std::string str)
+{
+    vector<int> couldntfind;
+    auto vec = SplitDigits(str);
+    if (vec.size() == 0)
+        return;
+    for (int i = 0; i < vec.size(); i++)
+    {
+        auto it = find_if(ArchiveTasks.begin(), ArchiveTasks.end(), [&](Task p) { return p.number == vec[i]; });
+        if (it != Tasks.end())
+        {
+            it->number = GetNewNum();
+            Tasks.push_back(*it);
+            ArchiveTasks.erase(it, it + 1);
+        }
+        else
+        {
+            couldntfind.push_back(vec[i]);
+        }
+    }
+    Print::CountVector();
+    FileOperations::WriteToFile();
+    ArchiveFileOperations::WriteArchive();
 }
 
 void Operations::Begin(std::string str)
@@ -49,7 +94,7 @@ void Operations::Begin(std::string str)
             couldntFind.push_back(vec[i]);
         }
     }
-    Taskbook::CountVector();
+    Print::CountVector();
     FileOperations::WriteToFile();
 }
 void Operations::Check(std::string str)
@@ -83,7 +128,7 @@ void Operations::Check(std::string str)
             couldntFind.push_back(vec[i]);
         }
     }
-    Taskbook::CountVector();
+    Print::CountVector();
     FileOperations::WriteToFile();
 }
 
@@ -129,13 +174,17 @@ void Operations::Help()
     cout << "   Taskbook: [<options> ...]\n\n";
     cout << "   Options\n";
     cout << "       none                Display board view\n";
+    cout << "       --archive -a        Display archived items\n";
     cout << "       --begin -b          Start/pause task\n";
     cout << "       --check -c          Check/uncheck task\n";
     cout << "       --delete -d         Delete item\n";
     cout << "       --edit -e           Edit item description\n";
+    cout << "       --find -f           Search for items\n";
     cout << "       --help -h           Display help message\n";
     cout << "       --note -n           Create note\n";
-    cout << "       --task -t           Create task\n"
+    cout << "       --restore -r        Restore from archive\n";
+    cout << "       --task -t           Create task\n";
+    cout << "       clear               Clear archive\n"
          << endl;
 }
 void Operations::Edit(std::string str)
@@ -173,8 +222,34 @@ void Operations::AddTask(std::string taskName, TaskStat_Enum stat)
     newTask.stat = stat;
     newTask.name = taskName;
     Tasks.push_back(newTask);
-    Taskbook::CountVector();
+    Print::CountVector();
     FileOperations::WriteToFile();
+}
+
+void Operations::Clear()
+{
+    ofstream file(ArchiveFileOperations::ArchivePath);
+    ArchiveTasks.clear();
+    for (int i = 0; i < Tasks.size(); i++)
+    {
+        Tasks[i].number = i + 1;
+    }
+    FileOperations::WriteToFile();
+}
+
+void Operations::Find(std::string str)
+{
+    vector<Task> items;
+    for (int i = 0; i < Tasks.size(); i++)
+    {
+        if (Tasks[i].name.find(str) != string::npos)
+        {
+            items.push_back(Tasks[i]);
+        }
+    }
+    cout << " ♥ Found Items" << endl;
+    Print::PrintBody(items);
+    cout << endl;
 }
 
 void Operations::RemoveTask(string str)
@@ -190,6 +265,7 @@ void Operations::RemoveTask(string str)
         auto it = find_if(Tasks.begin(), Tasks.end(), [&](Task p) { return p.number == vec[i]; });
         if (it != Tasks.end())
         {
+            SendToArchive(*it);
             Tasks.erase(it, it + 1);
             removed.push_back(vec[i]);
         }
@@ -198,6 +274,6 @@ void Operations::RemoveTask(string str)
             couldntFind.push_back(vec[i]);
         }
     }
-    Taskbook::CountVector();
+    Print::CountVector();
     FileOperations::WriteToFile();
 }
