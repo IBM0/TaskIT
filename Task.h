@@ -2,10 +2,10 @@
 #include "TaskStat_Enum.h"
 class Task
 {
-    public:
+public:
     int number;
     TaskStat_Enum stat;
     std::string name;
 
-    private:
+private:
 };
