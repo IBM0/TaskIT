@@ -1,6 +1,7 @@
 #include "Operations.h"
 #include <vector>
 #include <iostream>
+#include "Color.h"
 using namespace std;
 
 int Print::undoneCount;
@@ -15,8 +16,7 @@ void Print::CountVector()
     inprogress = 0;
     note = 0;
     doneCount = 0;
-    size = Operations::Tasks.size();
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < Operations::Tasks.size(); i++)
     {
         if (Operations::Tasks[i].stat == TaskStat_Enum::done)
         {
@@ -35,6 +35,7 @@ void Print::CountVector()
             inprogress++;
         }
     }
+    size = doneCount + undoneCount + inprogress;
 }
 
 void Print::PrintBody(const std::vector<Task> &vec)
@@ -43,23 +44,23 @@ void Print::PrintBody(const std::vector<Task> &vec)
     {
         if (vec[i].stat == TaskStat_Enum::done)
         {
-            cout << "    " << vec[i].number << "."
-                 << " ✔  " << vec[i].name << endl;
+            cout << "    " << Color::fadecyan << vec[i].number << "."
+                 << Color::yellow << " ✔  " << Color::fadecyan << vec[i].name << Color::reset << endl;
         }
         else if (vec[i].stat == TaskStat_Enum::undone)
         {
-            cout << "    " << vec[i].number << "."
-                 << " ☐  " << vec[i].name << endl;
+            cout << "    " << Color::fadecyan << vec[i].number << "."
+                 << Color::magenta << " ☐  " << Color::cyan << vec[i].name << Color::reset << endl;
         }
         else if (vec[i].stat == TaskStat_Enum::note)
         {
-            cout << "    " << vec[i].number << "."
-                 << " ★  " << vec[i].name << endl;
+            cout << "    " << Color::fadecyan << vec[i].number << "."
+                 << Color::blue << " ●  " << Color::cyan << vec[i].name << Color::reset << endl;
         }
         else if (vec[i].stat == TaskStat_Enum::inprogress)
         {
-            cout << "    " << vec[i].number << "."
-                 << " ⋯  " << vec[i].name << endl;
+            cout << "    " << Color::fadecyan << vec[i].number << "."
+                 << Color::bright_blue << " ⋯  " << Color::cyan << vec[i].name << Color::reset << endl;
         }
     }
 }
@@ -71,19 +72,26 @@ void Print::PrintTasks()
     {
         percent = ((doneCount * 100) / size);
     }
-    cout << " ♥ My Board [" << doneCount << "/" << size << "]" << endl;
+
+    cout << Color::boldbright_red << " ♥ " << Color::underlineboldbright_black
+         << "My Board" << Color::cyan << " [" << doneCount << "/" << size << "]" << Color::reset << endl;
+
     PrintBody(Operations::Tasks);
 
-    cout << "\n " << percent << "% of all tasks completed\n";
-    cout << " " << doneCount << " done • " << inprogress << " in-progress • ";
-    cout << undoneCount << " pending"
-         << " • " << note << " notes\n"
+    cout << "\n " << Color::cyan << percent << "% of all tasks completed\n";
+    cout << " " << Color::boldyellow << doneCount << Color::cyan << " done · "
+         << Color::boldcyan << inprogress << Color::cyan << " in-progress · "
+         << Color::boldblack << undoneCount << Color::cyan << " pending"
+         << " · " << Color::boldblue << note << Color::cyan << " notes\n"
+         << Color::reset
          << endl;
 }
 
 void Print::PrintArchive()
 {
-    cout << " ♥ Archive" << endl;
+    cout << Color::boldbright_red << " ♥ " << Color::underlineboldbright_black
+         << "Archive" << Color::reset << endl;
+
     PrintBody(Operations::ArchiveTasks);
     cout << endl;
 }

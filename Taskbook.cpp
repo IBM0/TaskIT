@@ -1,6 +1,10 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <cctype>
+#include "Color.h"
+#include <locale>
+// #include <algorithm>
 #include <iterator>
 #include <vector>
 #include <math.h>
@@ -15,6 +19,8 @@
 using namespace std;
 
 static bool print = true;
+bool Taskbook::success = false;
+bool Taskbook::fail = false;
 
 void Taskbook::ManageTaskbook()
 {
@@ -36,11 +42,7 @@ void Taskbook::ManageTaskbook()
         {
             Print::PrintTasks();
         }
-
-        cout << "Taskbook: ";
-        getline(cin, input);
-        input = Trim(input);
-
+        input = TakeInput();
         if (input == "exit")
             return;
 
@@ -54,6 +56,29 @@ void Taskbook::ManageTaskbook()
             ManageCommand(inputPair);
         }
     }
+}
+
+string Taskbook::TakeInput()
+{
+    string input;
+    if (success)
+    {
+        cout << Color::boldbright_black << "Taskbook " << Color::blinkboldbright_yellow << "✔" << Color::reset << " ❖ ";
+        success = false;
+    }
+    else if (fail)
+    {
+        cout << Color::boldbright_black << "Taskbook " << Color::blinkboldbright_red << "✘" << Color::reset << " ❖ ";
+        fail = false;
+    }
+    else
+    {
+        cout << Color::boldbright_black << "Taskbook" << Color::reset << " ❖ ";
+    }
+    getline(cin, input);
+    input = Trim(input);
+
+    return input;
 }
 
 void Taskbook::ManageCommand(const std::pair<Op_Enum, std::string> &inputPair)
@@ -102,7 +127,6 @@ void Taskbook::ManageCommand(const std::pair<Op_Enum, std::string> &inputPair)
 
     case Op_Enum::restore:
         makeOperation.Restore(inputPair.second);
-        print = false;
         break;
 
     default:
@@ -171,21 +195,7 @@ std::pair<Op_Enum, std::string> Taskbook::ParseInput(string inputstr)
 
 std::string Taskbook::Trim(std::string str)
 {
-    int start = 0;
-    int end = 0;
-    for (int i = 0; i < str.size(); i++)
-    {
-        if (str[i] == ' ')
-            start++;
-        else
-            break;
-    }
-    for (int i = str.size() - 1; i >= 0; i--)
-    {
-        if (str[i] == ' ')
-            end++;
-        else
-            break;
-    }
-    return string(str.begin() + start, str.end() - end);
+    str.erase(str.begin(), find_if(str.begin(), str.end(), [](char p) { return !isspace(p); }));
+    str.erase(std::find_if(str.rbegin(), str.rend(), [](int p) { return !std::isspace(p); }).base(), str.end());
+    return str;
 }

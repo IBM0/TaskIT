@@ -8,5 +8,8 @@ private:
 
 public:
     static std::string Trim(std::string);
+    static bool success;
+    static bool fail;
     void ManageTaskbook();
+    static std::string TakeInput();
 };

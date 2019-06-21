@@ -7,7 +7,6 @@ public:
     static void PrintTasks();
     static void PrintBody(const std::vector<Task> &);
     static void PrintArchive();
-    // static void PrintSearch();
     static void CountVector();
     static int doneCount;
     static int undoneCount;
