@@ -7,7 +7,7 @@
 // #include <algorithm>
 #include <iterator>
 #include <vector>
-#include <math.h>
+#include <cmath>
 #include <numeric>
 #include <fstream>
 #include <experimental/filesystem>
@@ -63,12 +63,12 @@ string Taskbook::TakeInput()
     string input;
     if (success)
     {
-        cout << Color::boldbright_black << "Taskbook " << Color::blinkboldbright_yellow << "✔" << Color::reset << " ❖ ";
+        cout << Color::boldbright_black << "Taskbook " << Color::boldbright_yellow << "✔" << Color::reset << " ❖ ";
         success = false;
     }
     else if (fail)
     {
-        cout << Color::boldbright_black << "Taskbook " << Color::blinkboldbright_red << "✘" << Color::reset << " ❖ ";
+        cout << Color::boldbright_black << "Taskbook " << Color::boldbright_red << "✘" << Color::reset << " ❖ ";
         fail = false;
     }
     else
@@ -86,9 +86,9 @@ void Taskbook::ManageCommand(const std::pair<Op_Enum, std::string> &inputPair)
     Operations makeOperation;
     switch (inputPair.first)
     {
-    case Op_Enum::add:
-        makeOperation.AddTask(inputPair.second, TaskStat_Enum::undone);
-        break;
+        case Op_Enum::add:
+            makeOperation.AddTask(inputPair.second, TaskStat_Enum::undone);
+            break;
 
     case Op_Enum::add_note:
         makeOperation.AddTask(inputPair.second, TaskStat_Enum::note);
@@ -129,7 +129,7 @@ void Taskbook::ManageCommand(const std::pair<Op_Enum, std::string> &inputPair)
         makeOperation.Restore(inputPair.second);
         break;
 
-    default:
+    case Op_Enum::Nil:
         return;
     }
 }

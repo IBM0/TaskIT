@@ -2,7 +2,7 @@
 
 //1 bolds
 //2 fade
-//3 itelic
+//3 italic
 //4 underline
 //5 blinks
 //7 background

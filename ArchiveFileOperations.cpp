@@ -12,11 +12,11 @@ void ArchiveFileOperations::WriteArchive()
 {
     ofstream file;
     file.open(ArchivePath, ios::trunc | ios::out);
-    for (int i = 0; i < Operations::ArchiveTasks.size(); i++)
+    for (auto & ArchiveTask : Operations::ArchiveTasks)
     {
-        file << Operations::ArchiveTasks[i].number << endl;
-        file << Operations::ArchiveTasks[i].name << endl;
-        file << FileOperations::ReturnStr(Operations::ArchiveTasks[i].stat) << endl;
+        file << ArchiveTask.number << endl;
+        file << ArchiveTask.name << endl;
+        file << FileOperations::ReturnStr(ArchiveTask.stat) << endl;
         file << endl;
     }
 
@@ -31,7 +31,7 @@ void ArchiveFileOperations::ReadArchive()
     int count = 0;
     while (getline(file, str))
     {
-        if (str == "")
+        if (str.empty())
             continue;
 
         if (count == 0)

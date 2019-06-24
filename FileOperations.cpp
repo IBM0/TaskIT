@@ -32,11 +32,11 @@ void FileOperations::WriteToFile()
 {
     ofstream file;
     file.open(dataPath, ios::trunc | ios::out);
-    for (int i = 0; i < Operations::Tasks.size(); i++)
+    for (auto &Task : Operations::Tasks)
     {
-        file << Operations::Tasks[i].number << endl;
-        file << Operations::Tasks[i].name << endl;
-        file << ReturnStr(Operations::Tasks[i].stat) << endl;
+        file << Task.number << endl;
+        file << Task.name << endl;
+        file << ReturnStr(Task.stat) << endl;
         file << endl;
     }
 
@@ -52,7 +52,7 @@ void FileOperations::ReadFromFile()
     int count = 0;
     while (getline(file, str))
     {
-        if (str == "")
+        if (str.empty())
             continue;
 
         if (count == 0)

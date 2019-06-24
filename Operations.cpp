@@ -1,4 +1,4 @@
-#include <vector>
+#include <utility> #include <vector>
 #include <string>
 #include "Color.h"
 #include <iostream>
@@ -43,15 +43,15 @@ void Operations::SendToArchive(Task deletedTask)
 
 void Operations::Restore(std::string str)
 {
-    auto vec = SplitDigits(str);
-    if (vec.size() == 0)
+    auto vec = SplitDigits(std::move(str));
+    if (vec.empty())
     {
         Taskbook::fail = true;
         return;
     }
-    for (int i = 0; i < vec.size(); i++)
+    for (int i : vec)
     {
-        auto it = find_if(ArchiveTasks.begin(), ArchiveTasks.end(), [&](Task p) { return p.number == vec[i]; });
+        auto it = find_if(ArchiveTasks.begin(), ArchiveTasks.end(), [&](Task p) { return p.number == i; });
         if (it != ArchiveTasks.end())
         {
             it->number = GetNewNum();
@@ -70,15 +70,15 @@ void Operations::Restore(std::string str)
 
 void Operations::Begin(std::string str)
 {
-    auto vec = SplitDigits(str);
-    if (vec.size() == 0)
+    auto vec = SplitDigits(std::move(str));
+    if (vec.empty())
     {
         Taskbook::fail = true;
         return;
     }
-    for (int i = 0; i < vec.size(); i++)
+    for (int i : vec)
     {
-        auto it = find_if(Tasks.begin(), Tasks.end(), [&](Task p) { return p.number == vec[i]; });
+        auto it = find_if(Tasks.begin(), Tasks.end(), [&](Task p) { return p.number == i; });
         if (it != Tasks.end())
         {
             if (Tasks[it - Tasks.begin()].stat == TaskStat_Enum::undone)
@@ -101,16 +101,16 @@ void Operations::Begin(std::string str)
 }
 void Operations::Check(std::string str)
 {
-    auto vec = SplitDigits(str);
-    if (vec.size() == 0)
+    auto vec = SplitDigits(std::move(str));
+    if (vec.empty())
     {
         Taskbook::fail = true;
         return;
     }
 
-    for (int i = 0; i < vec.size(); i++)
+    for (int i : vec)
     {
-        auto it = find_if(Tasks.begin(), Tasks.end(), [&](Task p) { return p.number == vec[i]; });
+        auto it = find_if(Tasks.begin(), Tasks.end(), [&](Task p) { return p.number == i; });
         if (it != Tasks.end())
         {
             if (Tasks[it - Tasks.begin()].stat == TaskStat_Enum::done)
@@ -141,7 +141,7 @@ std::vector<int> Operations::SplitDigits(std::string str)
 {
     vector<string> numbers;
     auto it = str.begin();
-    string temp = "";
+    string temp;
     while (it != str.end())
     {
         if (isdigit(*it))
@@ -150,7 +150,7 @@ std::vector<int> Operations::SplitDigits(std::string str)
         }
         else if (*it == ' ')
         {
-            if (temp.size() > 0)
+            if (!temp.empty())
             {
                 numbers.push_back(temp);
             }
@@ -163,7 +163,7 @@ std::vector<int> Operations::SplitDigits(std::string str)
         }
         it++;
     }
-    if (temp.size() > 0)
+    if (!temp.empty())
         numbers.push_back(temp);
 
     vector<int> allnumbers;
@@ -197,7 +197,7 @@ void Operations::Edit(std::string str)
     auto it = find_if(str.begin(), str.end(), [](char p) { return p == ' '; });
     string temp = string(str.begin(), it);
 
-    if (temp.size() == 0 || !all_of(temp.begin(), temp.end(), [](char p) { return isdigit(p); }))
+    if (temp.empty() || !all_of(temp.begin(), temp.end(), [](char p) { return isdigit(p); }))
     {
         Taskbook::fail = true;
         return;
@@ -210,7 +210,7 @@ void Operations::Edit(std::string str)
         return;
     }
     string ss = Taskbook::Trim(string(it, str.end()));
-    if (ss == "")
+    if (ss.empty())
     {
         Taskbook::fail = true;
         return;
@@ -224,9 +224,9 @@ void Operations::Edit(std::string str)
     FileOperations::WriteToFile();
 }
 
-void Operations::AddTask(std::string taskName, TaskStat_Enum stat)
+void Operations::AddTask(const std::string& taskName, TaskStat_Enum stat)
 {
-    if (taskName == "")
+    if (taskName.empty())
     {
         Taskbook::fail = true;
         return;
@@ -255,9 +255,9 @@ void Operations::Clear()
     FileOperations::WriteToFile();
 }
 
-void Operations::Find(std::string str)
+void Operations::Find(const std::string& str)
 {
-    if (str == "")
+    if (str.empty())
     {
         Taskbook::fail = true;
         cout << Color::boldbright_red << " ♥ " << Color::underlineboldbright_black
@@ -267,11 +267,11 @@ void Operations::Find(std::string str)
     }
 
     vector<Task> items;
-    for (int i = 0; i < Tasks.size(); i++)
+    for (auto & Task : Tasks)
     {
-        if (Tasks[i].name.find(str) != string::npos)
+        if (Task.name.find(str) != string::npos)
         {
-            items.push_back(Tasks[i]);
+            items.push_back(Task);
             Taskbook::success = true;
         }
     }
@@ -288,15 +288,15 @@ void Operations::Find(std::string str)
 
 void Operations::RemoveTask(string str)
 {
-    auto vec = SplitDigits(str);
-    if (vec.size() == 0)
+    auto vec = SplitDigits(std::move(str));
+    if (vec.empty())
     {
         Taskbook::fail = true;
         return;
     }
-    for (int i = 0; i < vec.size(); i++)
+    for (int i : vec)
     {
-        auto it = find_if(Tasks.begin(), Tasks.end(), [&](Task p) { return p.number == vec[i]; });
+        auto it = find_if(Tasks.begin(), Tasks.end(), [&](Task p) { return p.number == i; });
         if (it != Tasks.end())
         {
             SendToArchive(*it);

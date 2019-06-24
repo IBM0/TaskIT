@@ -16,21 +16,21 @@ void Print::CountVector()
     inprogress = 0;
     note = 0;
     doneCount = 0;
-    for (int i = 0; i < Operations::Tasks.size(); i++)
+    for (auto & Task : Operations::Tasks)
     {
-        if (Operations::Tasks[i].stat == TaskStat_Enum::done)
+        if (Task.stat == TaskStat_Enum::done)
         {
             doneCount++;
         }
-        else if (Operations::Tasks[i].stat == TaskStat_Enum::undone)
+        else if (Task.stat == TaskStat_Enum::undone)
         {
             undoneCount++;
         }
-        else if (Operations::Tasks[i].stat == TaskStat_Enum::note)
+        else if (Task.stat == TaskStat_Enum::note)
         {
             note++;
         }
-        else if (Operations::Tasks[i].stat == TaskStat_Enum::inprogress)
+        else if (Task.stat == TaskStat_Enum::inprogress)
         {
             inprogress++;
         }
@@ -40,27 +40,27 @@ void Print::CountVector()
 
 void Print::PrintBody(const std::vector<Task> &vec)
 {
-    for (int i = 0; i < vec.size(); i++)
+    for (const auto & i : vec)
     {
-        if (vec[i].stat == TaskStat_Enum::done)
+        if (i.stat == TaskStat_Enum::done)
         {
-            cout << "    " << Color::fadecyan << vec[i].number << "."
-                 << Color::yellow << " ✔  " << Color::fadecyan << vec[i].name << Color::reset << endl;
+            cout << "    " << Color::fadecyan << i.number << "."
+                 << Color::yellow << " ✔  " << Color::fadecyan << i.name << Color::reset << endl;
         }
-        else if (vec[i].stat == TaskStat_Enum::undone)
+        else if (i.stat == TaskStat_Enum::undone)
         {
-            cout << "    " << Color::fadecyan << vec[i].number << "."
-                 << Color::magenta << " ☐  " << Color::cyan << vec[i].name << Color::reset << endl;
+            cout << "    " << Color::fadecyan << i.number << "."
+                 << Color::magenta << " ☐  " << Color::cyan << i.name << Color::reset << endl;
         }
-        else if (vec[i].stat == TaskStat_Enum::note)
+        else if (i.stat == TaskStat_Enum::note)
         {
-            cout << "    " << Color::fadecyan << vec[i].number << "."
-                 << Color::blue << " ●  " << Color::cyan << vec[i].name << Color::reset << endl;
+            cout << "    " << Color::fadecyan << i.number << "."
+                 << Color::blue << " ●  " << Color::cyan << i.name << Color::reset << endl;
         }
-        else if (vec[i].stat == TaskStat_Enum::inprogress)
+        else if (i.stat == TaskStat_Enum::inprogress)
         {
-            cout << "    " << Color::fadecyan << vec[i].number << "."
-                 << Color::bright_blue << " ⋯  " << Color::cyan << vec[i].name << Color::reset << endl;
+            cout << "    " << Color::fadecyan << i.number << "."
+                 << Color::bright_blue << " ⋯  " << Color::cyan << i.name << Color::reset << endl;
         }
     }
 }
