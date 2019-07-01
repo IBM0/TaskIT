@@ -305,7 +305,7 @@ void Operations::Find(const std::string &str)
             }
         }
     }
-    
+
     if (!Taskbook::success)
     {
         Taskbook::fail = true;
@@ -313,9 +313,8 @@ void Operations::Find(const std::string &str)
         return;
     }
 
-    cout << boldbright_red  << " オ" << boldblack
-         << "Found Items" << reset << endl;
-    Print::PrintBody(items,true);
+    cout << boldred << " オ" << underLinebrightblue << "Found Items" << reset << endl;
+    Print::PrintBody(items, true);
     cout << endl;
 }
 

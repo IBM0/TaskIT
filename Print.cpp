@@ -52,33 +52,33 @@ void Print::PrintBody(const std::vector<Task> &vec, bool isprint)
         if (i.stat == TaskStat_Enum::done)
         {
 
-            cout << "    " << fadecyan << i.number << "." << reset
-                 << boldbright_yellow << " ✔  " << reset << fadecyan << i.name << reset;
+            cout << "    " << gray << i.number << "." << reset
+                 << boldyellow << " ✔  " << reset << gray << i.name << reset;
         }
         else if (i.stat == TaskStat_Enum::undone)
         {
-            cout << "    " << fadecyan << i.number << "."
-                 << magenta << " ☐  " << cyan << i.name << reset;
+            cout << "    " << gray << i.number << "."
+                 << boldmagenta << " ☐  " << brightblue << i.name << reset;
         }
         else if (i.stat == TaskStat_Enum::note)
         {
-            cout << "    " << fadecyan << i.number << "."
-                 << blue << " ●  " << cyan << i.name << reset;
+            cout << "    " << gray << i.number << "."
+                 << boldblue << " ●  " << brightblue << i.name << reset;
         }
         else if (i.stat == TaskStat_Enum::inprogress)
         {
-            cout << "    " << fadecyan << i.number << "."
-                 << bright_blue << " ⋯  " << cyan << i.name << reset;
+            cout << "    " << gray << i.number << "."
+                 << orange << " ⋯  " << brightblue << i.name << reset;
         }
         if (st)
         {
-            cout << boldbright_green << " ★" << reset;
+            cout << orange << " ★" << reset;
         }
-        if (isprint&&i.notebook !="My Board")
+        if (isprint && i.notebook != "My Board")
         {
-            cout << fadecyan << " @" + i.notebook << reset;
+            cout << gray << " @" + i.notebook << reset;
         }
-        
+
         cout << endl;
     }
 }
@@ -93,27 +93,27 @@ void Print::PrintTasks(const std::vector<Task> &vec, bool isprint = true, std::s
 
     if (isprint)
     {
-        cout << boldbright_red << " ♥ ";
-        cout << boldblack
-             << name << reset << cyan << " [" << doneCount << "/" << size << "]" << reset << endl;
+        cout << boldred << " ♥ ";
+        cout << underLinemagenta
+             << name << reset << gray << " [" << doneCount << "/" << size << "]" << reset << endl;
     }
     else
     {
         cout << "  " << boldblue
-             << name << cyan << " [" << doneCount << "/" << size << "]" << reset << endl;
+             << name << gray << " [" << doneCount << "/" << size << "]" << reset << endl;
     }
 
-    PrintBody(vec,isprint);
+    PrintBody(vec, isprint);
 
     if (isprint)
     {
 
-        cout << "\n " << fadecyan << percent << "% of all tasks completed\n"
+        cout << "\n " << gray << percent << "% of all tasks completed\n"
              << reset;
-        cout << " " << boldyellow << doneCount << reset << fadecyan << " done · " << reset
-             << boldcyan << inprogress << reset << fadecyan << " in-progress · " << reset
-             << boldblack << undoneCount << reset << fadecyan << " pending" << reset
-             << " · " << boldblue << note << reset << fadecyan << " notes\n"
+        cout << " " << boldyellow << doneCount << reset << gray << " done · " << reset
+             << boldorange << inprogress << reset << gray << " in-progress · " << reset
+             << boldmagenta << undoneCount << reset << gray << " pending" << reset
+             << " · " << boldblue << note << reset << gray << " notes\n"
              << reset
              << endl;
     }
@@ -121,9 +121,9 @@ void Print::PrintTasks(const std::vector<Task> &vec, bool isprint = true, std::s
 
 void Print::PrintArchive()
 {
-    cout << boldbright_red << " ネ" << boldblack
+    cout << boldred << " ネ" << underLinebrightblue
          << "Archive" << reset << endl;
 
-    PrintBody(Operations::ArchiveTasks,true);
+    PrintBody(Operations::ArchiveTasks, true);
     cout << endl;
 }

@@ -1,21 +1,13 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
-// #include <cctype>
 #include "Color.h"
-// #include <locale>
-// #include <iterator>
-// #include <vector>
-// #include <cmath>
-// #include <numeric>
 #include <fstream>
-#include <experimental/filesystem>
 #include "Taskbook.h"
 #include "Operations.h"
 #include "FileOperations.h"
 #include "pathInfo.h"
 #include "ArchiveFileOperations.h"
-#include <experimental/filesystem>
 #include <unistd.h>
 using namespace std;
 
@@ -78,12 +70,12 @@ string Taskbook::TakeInput()
     string input;
     if (success)
     {
-        cout << boldblue << "Taskbook " << boldbright_yellow << "✔" << reset << " ❖ ";
+        cout << boldblue << "Taskbook " << boldyellow << "✔" << reset << " ❖ ";
         success = false;
     }
     else if (fail)
     {
-        cout << boldblue << "Taskbook " << boldbright_red << "✘" << reset << " ❖ ";
+        cout << boldblue << "Taskbook " << boldred << "✘" << reset << " ❖ ";
         fail = false;
     }
     else
