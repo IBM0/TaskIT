@@ -3,8 +3,6 @@
 class FileOperations
 {
 private:
-    static const std::string dataPath;
-
 public:
     static std::string ReturnStr(TaskStat_Enum);
     static void WriteToFile();

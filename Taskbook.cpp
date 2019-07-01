@@ -1,37 +1,45 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
-#include <cctype>
+// #include <cctype>
 #include "Color.h"
-#include <locale>
-// #include <algorithm>
-#include <iterator>
-#include <vector>
-#include <cmath>
-#include <numeric>
+// #include <locale>
+// #include <iterator>
+// #include <vector>
+// #include <cmath>
+// #include <numeric>
 #include <fstream>
 #include <experimental/filesystem>
 #include "Taskbook.h"
 #include "Operations.h"
 #include "FileOperations.h"
+#include "pathInfo.h"
 #include "ArchiveFileOperations.h"
 #include <experimental/filesystem>
+#include <unistd.h>
 using namespace std;
 
-static bool print = true;
+bool Taskbook::print = true;
 bool Taskbook::success = false;
 bool Taskbook::fail = false;
+std::string UserName;
+std::string dataPath;
+std::string ArchivePath;
+
+void Taskbook::SetPaths()
+{
+    char *p = getlogin();
+    UserName = string(p);
+    dataPath = "/home/" + UserName + "/.taskbook/data.txt";
+    ArchivePath = "/home/" + UserName + "/.taskbook/archive.txt";
+}
 
 void Taskbook::ManageTaskbook()
 {
+    SetPaths();
     FileOperations::ReadFromFile();
     ArchiveFileOperations::ReadArchive();
-    ifstream f(ArchiveFileOperations::ArchivePath.c_str());
-    if (!f.good())
-    {
-        ofstream file(ArchiveFileOperations::ArchivePath);
-    }
-    Print::CountVector();
+    Print::CountVector(Operations::Tasks);
 
     while (true)
     {
@@ -40,9 +48,16 @@ void Taskbook::ManageTaskbook()
 
         if (print)
         {
-            Print::PrintTasks();
+            Print::PrintTasks(Operations::Tasks, true, "My Board");
         }
         input = TakeInput();
+        if (input == "")
+        {
+            cout << "\n";
+            print = true;
+            continue;
+        }
+
         if (input == "exit")
             return;
 
@@ -63,17 +78,17 @@ string Taskbook::TakeInput()
     string input;
     if (success)
     {
-        cout << Color::boldbright_black << "Taskbook " << Color::boldbright_yellow << "✔" << Color::reset << " ❖ ";
+        cout << boldblue << "Taskbook " << boldbright_yellow << "✔" << reset << " ❖ ";
         success = false;
     }
     else if (fail)
     {
-        cout << Color::boldbright_black << "Taskbook " << Color::boldbright_red << "✘" << Color::reset << " ❖ ";
+        cout << boldblue << "Taskbook " << boldbright_red << "✘" << reset << " ❖ ";
         fail = false;
     }
     else
     {
-        cout << Color::boldbright_black << "Taskbook" << Color::reset << " ❖ ";
+        cout << boldblue << "Taskbook" << reset << " ❖ ";
     }
     getline(cin, input);
     input = Trim(input);
@@ -86,9 +101,9 @@ void Taskbook::ManageCommand(const std::pair<Op_Enum, std::string> &inputPair)
     Operations makeOperation;
     switch (inputPair.first)
     {
-        case Op_Enum::add:
-            makeOperation.AddTask(inputPair.second, TaskStat_Enum::undone);
-            break;
+    case Op_Enum::add:
+        makeOperation.AddTask(inputPair.second, TaskStat_Enum::undone);
+        break;
 
     case Op_Enum::add_note:
         makeOperation.AddTask(inputPair.second, TaskStat_Enum::note);
@@ -110,6 +125,19 @@ void Taskbook::ManageCommand(const std::pair<Op_Enum, std::string> &inputPair)
         makeOperation.Edit(inputPair.second);
         break;
 
+    case Op_Enum::clear:
+        makeOperation.Clear();
+        break;
+
+    case Op_Enum::list:
+        print = false;
+        makeOperation.List(inputPair.second);
+        break;
+
+    case Op_Enum::star:
+        makeOperation.Star(inputPair.second);
+        break;
+
     case Op_Enum::help:
         makeOperation.Help();
         print = false;
@@ -121,8 +149,8 @@ void Taskbook::ManageCommand(const std::pair<Op_Enum, std::string> &inputPair)
         break;
 
     case Op_Enum::find:
-        makeOperation.Find(inputPair.second);
         print = false;
+        makeOperation.Find(inputPair.second);
         break;
 
     case Op_Enum::restore:
@@ -184,11 +212,20 @@ std::pair<Op_Enum, std::string> Taskbook::ParseInput(string inputstr)
     else if (shortcut == "-a" || shortcut == "--archive")
         operationName = Op_Enum::archive;
 
+    else if (shortcut == "-l" || shortcut == "--list")
+        operationName = Op_Enum::list;
+
+    else if (shortcut == "-s" || shortcut == "--star")
+        operationName = Op_Enum::star;
+
     else if (shortcut == "-r" || shortcut == "--restore")
         operationName = Op_Enum::restore;
 
     else
+    {
         operationName = Op_Enum::Nil;
+        Taskbook::fail = true;
+    }
 
     return {operationName, parsed};
 }

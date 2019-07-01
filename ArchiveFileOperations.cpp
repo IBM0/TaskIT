@@ -4,19 +4,33 @@
 #include "ArchiveFileOperations.h"
 #include "Operations.h"
 #include "FileOperations.h"
-using namespace std;
+#include "pathInfo.h"
+#include <unistd.h>
 
-const string ArchiveFileOperations::ArchivePath = "/home/mert/.taskbook/archive.txt";
+using namespace std;
 
 void ArchiveFileOperations::WriteArchive()
 {
     ofstream file;
     file.open(ArchivePath, ios::trunc | ios::out);
-    for (auto & ArchiveTask : Operations::ArchiveTasks)
+    for (auto &ArchiveTask : Operations::ArchiveTasks)
     {
-        file << ArchiveTask.number << endl;
-        file << ArchiveTask.name << endl;
-        file << FileOperations::ReturnStr(ArchiveTask.stat) << endl;
+        bool st = ArchiveTask.starred;
+        file << ArchiveTask.number << "\n";
+        file << ArchiveTask.name << "\n";
+        file << FileOperations::ReturnStr(ArchiveTask.stat) << "\n";
+        if (st)
+        {
+            file << "yes"
+                 << "\n";
+        }
+        else
+        {
+            file << "no"
+                 << "\n";
+        }
+        file << ArchiveTask.notebook << "\n";
+
         file << endl;
     }
 
@@ -54,8 +68,24 @@ void ArchiveFileOperations::ReadArchive()
             else if (str == "inprogress")
                 unit.stat = TaskStat_Enum::inprogress;
         }
+
+        else if (count == 3)
+        {
+            if (str == "yes")
+                unit.starred = true;
+
+            else
+            {
+                unit.starred = false;
+            }
+        }
+        else if (count == 4)
+        {
+            unit.notebook = str;
+        }
+
         count++;
-        if (count == 3)
+        if (count == 5)
         {
             Operations::ArchiveTasks.push_back(unit);
             count = 0;

@@ -4,8 +4,8 @@
 #include <string>
 #include "FileOperations.h"
 #include "Operations.h"
+#include "pathInfo.h"
 using namespace std;
-const std::string FileOperations::dataPath = "/home/mert/.taskbook/data.txt";
 
 std::string FileOperations::ReturnStr(TaskStat_Enum stat)
 {
@@ -34,10 +34,22 @@ void FileOperations::WriteToFile()
     file.open(dataPath, ios::trunc | ios::out);
     for (auto &Task : Operations::Tasks)
     {
-        file << Task.number << endl;
-        file << Task.name << endl;
-        file << ReturnStr(Task.stat) << endl;
-        file << endl;
+        file << Task.number << "\n";
+        file << Task.name << "\n";
+        file << ReturnStr(Task.stat) << "\n";
+        if (Task.starred)
+        {
+            file << "yes"
+                 << "\n";
+        }
+        else
+        {
+            file << "no"
+                 << "\n";
+        }
+        file << Task.notebook << "\n";
+
+        file << "\n";
     }
 
     file.close();
@@ -75,8 +87,24 @@ void FileOperations::ReadFromFile()
             else if (str == "inprogress")
                 unit.stat = TaskStat_Enum::inprogress;
         }
+
+        else if (count == 3)
+        {
+            if (str == "yes")
+                unit.starred = true;
+
+            else
+            {
+                unit.starred = false;
+            }
+        }
+        else if (count == 4)
+        {
+            unit.notebook = str;
+        }
+
         count++;
-        if (count == 3)
+        if (count == 5)
         {
             Operations::Tasks.push_back(unit);
             count = 0;

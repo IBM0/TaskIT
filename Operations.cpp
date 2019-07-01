@@ -1,12 +1,15 @@
-#include <utility> #include <vector>
+#include <utility>
 #include <string>
 #include "Color.h"
 #include <iostream>
 #include <fstream>
+#include <set>
 #include <algorithm>
+#include <iterator>
 #include "Operations.h"
 #include "FileOperations.h"
 #include "ArchiveFileOperations.h"
+#include "pathInfo.h"
 #include "Taskbook.h"
 using namespace std;
 
@@ -63,7 +66,7 @@ void Operations::Restore(std::string str)
     if (!Taskbook::success)
         Taskbook::fail = true;
 
-    Print::CountVector();
+    Print::CountVector(Tasks);
     FileOperations::WriteToFile();
     ArchiveFileOperations::WriteArchive();
 }
@@ -96,7 +99,7 @@ void Operations::Begin(std::string str)
     if (!Taskbook::success)
         Taskbook::fail = true;
 
-    Print::CountVector();
+    Print::CountVector(Tasks);
     FileOperations::WriteToFile();
 }
 void Operations::Check(std::string str)
@@ -133,7 +136,7 @@ void Operations::Check(std::string str)
     if (!Taskbook::success)
         Taskbook::fail = true;
 
-    Print::CountVector();
+    Print::CountVector(Tasks);
     FileOperations::WriteToFile();
 }
 
@@ -186,8 +189,10 @@ void Operations::Help()
     cout << "       --edit -e           Edit item description\n";
     cout << "       --find -f           Search for items\n";
     cout << "       --help -h           Display help message\n";
+    cout << "       --list -l           List items by attributes\n";
     cout << "       --note -n           Create note\n";
     cout << "       --restore -r        Restore from archive\n";
+    cout << "       --star -s           Star/unstar item\n";
     cout << "       --task -t           Create task\n";
     cout << "       clear               Clear archive\n"
          << endl;
@@ -224,7 +229,7 @@ void Operations::Edit(std::string str)
     FileOperations::WriteToFile();
 }
 
-void Operations::AddTask(const std::string& taskName, TaskStat_Enum stat)
+void Operations::AddTask(const std::string &taskName, TaskStat_Enum stat)
 {
     if (taskName.empty())
     {
@@ -236,16 +241,42 @@ void Operations::AddTask(const std::string& taskName, TaskStat_Enum stat)
     Task newTask;
     newTask.number = num;
     newTask.stat = stat;
-    newTask.name = taskName;
+    newTask.starred = false;
+
+    auto t = find_if(taskName.rbegin(), taskName.rend(), [](char p) { return p == '@'; });
+    auto it = t.base();
+    if (it != taskName.begin() && ((*(it - 2)) == ' '))
+    {
+        newTask.name = Taskbook::Trim(string(taskName.begin(), it - 2));
+        if (newTask.name.empty())
+        {
+            Taskbook::fail = true;
+            return;
+        }
+
+        newTask.notebook = Taskbook::Trim(string(it, taskName.end()));
+        if (newTask.notebook == "")
+        {
+            Taskbook::fail = true;
+            Taskbook::print = true;
+            return;
+        }
+    }
+    else
+    {
+        newTask.name = taskName;
+        newTask.notebook = "My Board";
+    }
+
     Tasks.push_back(newTask);
     Taskbook::success = true;
-    Print::CountVector();
+    Print::CountVector(Tasks);
     FileOperations::WriteToFile();
 }
 
 void Operations::Clear()
 {
-    ofstream file(ArchiveFileOperations::ArchivePath);
+    ofstream file(ArchivePath);
     ArchiveTasks.clear();
     for (int i = 0; i < Tasks.size(); i++)
     {
@@ -255,35 +286,132 @@ void Operations::Clear()
     FileOperations::WriteToFile();
 }
 
-void Operations::Find(const std::string& str)
+void Operations::Find(const std::string &str)
 {
+    bool enter = true;
     if (str.empty())
     {
-        Taskbook::fail = true;
-        cout << Color::boldbright_red << " ♥ " << Color::underlineboldbright_black
-             << "Found Items" << Color::reset << "\n"
-             << endl;
-        return;
+        enter = false;
     }
-
     vector<Task> items;
-    for (auto & Task : Tasks)
+    if (enter)
     {
-        if (Task.name.find(str) != string::npos)
+        for (auto &Task : Tasks)
         {
-            items.push_back(Task);
-            Taskbook::success = true;
+            if (Task.name.find(str) != string::npos)
+            {
+                items.push_back(Task);
+                Taskbook::success = true;
+            }
         }
     }
+    
     if (!Taskbook::success)
     {
         Taskbook::fail = true;
+        Taskbook::print = true;
+        return;
     }
 
-    cout << Color::boldbright_red << " ♥ " << Color::underlineboldbright_black
-         << "Found Items" << Color::reset << endl;
-    Print::PrintBody(items);
+    cout << boldbright_red  << " オ" << boldblack
+         << "Found Items" << reset << endl;
+    Print::PrintBody(items,true);
     cout << endl;
+}
+
+set<string> Operations::NotebookSplit(string str)
+{
+    vector<std::string> items;
+    auto pos = str.begin();
+    if (str != "")
+    {
+        std::string token;
+        do
+        {
+            pos = find_if(str.begin(), str.end(), [](char p) { return p != ' '; });
+            str.erase(str.begin(), pos);
+            pos = find_if(str.begin(), str.end(), [](char p) { return p == ' '; });
+            items.push_back(string(str.begin(), pos));
+            str.erase(str.begin(), pos);
+
+        } while (str != "");
+    }
+
+    set<string> myset;
+    for (auto &item : items)
+    {
+        bool anyof = any_of(Tasks.begin(), Tasks.end(), [&](Task p) { return p.notebook == item; });
+        if (anyof)
+        {
+            myset.insert(item);
+        }
+    }
+    return myset;
+}
+
+void Operations::IterateNotebooks(const std::set<std::string> &myset)
+{
+    for (auto &&i : myset)
+    {
+        vector<Task> temp;
+        copy_if(Tasks.begin(), Tasks.end(), back_inserter(temp), [&](Task p) { return p.notebook == i; });
+        Print::CountVector(temp);
+        Print::PrintTasks(temp, false, "@" + i);
+        cout << endl;
+    }
+}
+
+void Operations::List(string str)
+{
+    if (str.empty())
+    {
+        set<string> myset;
+        transform(Tasks.begin(), Tasks.end(), inserter(myset, myset.begin()), [](Task p) { return p.notebook; });
+        IterateNotebooks(myset);
+        Print::CountVector(Tasks);
+        return;
+    }
+
+    auto notebooks = NotebookSplit(str);
+    if (notebooks.empty())
+    {
+        Taskbook::fail = true;
+        Taskbook::print = true;
+        return;
+    }
+    else
+    {
+        IterateNotebooks(notebooks);
+    }
+    Print::CountVector(Tasks);
+}
+
+void Operations::Star(string str)
+{
+    auto vec = SplitDigits(std::move(str));
+    if (vec.empty())
+    {
+        Taskbook::fail = true;
+        return;
+    }
+    for (auto &&i : vec)
+    {
+        auto it = find_if(Tasks.begin(), Tasks.end(), [&](Task p) { return p.number == i; });
+        if (it != Tasks.end())
+        {
+            bool isstarred = Tasks[it - Tasks.begin()].starred;
+            if (isstarred)
+            {
+                Tasks[it - Tasks.begin()].starred = false;
+            }
+            else
+            {
+                Tasks[it - Tasks.begin()].starred = true;
+            }
+            Taskbook::success = true;
+        }
+    }
+    FileOperations::WriteToFile();
 }
 
 void Operations::RemoveTask(string str)
@@ -309,6 +437,6 @@ void Operations::RemoveTask(string str)
         Taskbook::fail = true;
     }
 
-    Print::CountVector();
+    Print::CountVector(Tasks);
     FileOperations::WriteToFile();
 }
