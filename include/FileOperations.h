@@ -4,7 +4,7 @@ class FileOperations
 {
 private:
 public:
-    static std::string ReturnStr(TaskStat_Enum);
+    static std::string ReturnStr(TaskStat_Enum stat);
     static void WriteToFile();
     static void ReadFromFile();
 };

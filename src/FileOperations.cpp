@@ -1,25 +1,45 @@
-#include <fstream>
 #include <iostream>
+#include <fstream>
+#include <vector>
+#include <algorithm>
 #include <string>
-#include "ArchiveFileOperations.h"
-#include "Operations.h"
 #include "FileOperations.h"
+#include "Operations.h"
 #include "pathInfo.h"
-#include <unistd.h>
 
 using namespace std;
 
-void ArchiveFileOperations::WriteArchive()
+std::string FileOperations::ReturnStr(TaskStat_Enum stat)
+{
+    if (stat == TaskStat_Enum::done)
+    {
+        return "done";
+    }
+    else if (stat == TaskStat_Enum::undone)
+    {
+        return "undone";
+    }
+    else if (stat == TaskStat_Enum::note)
+    {
+        return "note";
+    }
+    else if (stat == TaskStat_Enum::inprogress)
+    {
+        return "inprogress";
+    }
+    return "Unknown";
+}
+
+void FileOperations::WriteToFile()
 {
     ofstream file;
-    file.open(ArchivePath, ios::trunc | ios::out);
-    for (auto &ArchiveTask : Operations::ArchiveTasks)
+    file.open(dataPath, ios::trunc | ios::out);
+    for (auto &Task : Operations::Tasks)
     {
-        bool st = ArchiveTask.starred;
-        file << ArchiveTask.number << "\n";
-        file << ArchiveTask.name << "\n";
-        file << FileOperations::ReturnStr(ArchiveTask.stat) << "\n";
-        if (st)
+        file << Task.number << "\n";
+        file << Task.name << "\n";
+        file << ReturnStr(Task.stat) << "\n";
+        if (Task.starred)
         {
             file << "yes"
                  << "\n";
@@ -29,19 +49,20 @@ void ArchiveFileOperations::WriteArchive()
             file << "no"
                  << "\n";
         }
-        file << ArchiveTask.notebook << "\n";
+        file << Task.notebook << "\n";
 
-        file << endl;
+        file << "\n";
     }
 
     file.close();
 }
-void ArchiveFileOperations::ReadArchive()
+
+void FileOperations::ReadFromFile()
 {
     string str;
     ifstream file;
-    Task unit;
-    file.open(ArchivePath, ios::in);
+    Task unit = Task();
+    file.open(dataPath, ios::in);
     int count = 0;
     while (getline(file, str))
     {
@@ -71,13 +92,7 @@ void ArchiveFileOperations::ReadArchive()
 
         else if (count == 3)
         {
-            if (str == "yes")
-                unit.starred = true;
-
-            else
-            {
-                unit.starred = false;
-            }
+            unit.starred = str == "yes";
         }
         else if (count == 4)
         {
@@ -87,10 +102,9 @@ void ArchiveFileOperations::ReadArchive()
         count++;
         if (count == 5)
         {
-            Operations::ArchiveTasks.push_back(unit);
+            Operations::Tasks.push_back(unit);
             count = 0;
         }
         str = "";
     }
-    file.close();
 }
