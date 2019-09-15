@@ -1,6 +1,7 @@
 #include <utility>
 #include <string>
 #include "Color.h"
+#include <cstdlib>
 #include <iostream>
 #include <fstream>
 #include <set>
@@ -181,22 +182,44 @@ void Operations::Help()
     cout << " Usage" << endl;
     cout << "   Taskbook: [<options> ...]\n\n";
     cout << "   Options\n";
-    cout << "       none                Display board view\n";
-    cout << "       --archive -a        Display archived items\n";
-    cout << "       --begin -b          Start/pause task\n";
-    cout << "       --check -c          Check/uncheck task\n";
-    cout << "       --delete -d         Delete item\n";
-    cout << "       --edit -e           Edit item description\n";
-    cout << "       --find -f           Search for items\n";
-    cout << "       --help -h           Display help message\n";
-    cout << "       --list -l           List items by attributes\n";
-    cout << "       --note -n           Create note\n";
-    cout << "       --restore -r        Restore from archive\n";
-    cout << "       --star -s           Star/unstar item\n";
-    cout << "       --task -t           Create task\n";
-    cout << "       clear               Clear archive\n"
+    cout << "       none            •      Display board view\n";
+    cout << "       archive  -a     •      Display archived items\n";
+    cout << "       begin  -b       •      Start/pause task\n";
+    cout << "       check  -c       •      Check/uncheck task\n";
+    cout << "       delete  -d      •      Delete item\n";
+    cout << "       edit  -e        •      Edit item description\n";
+    cout << "       find  -f        •      Search for items\n";
+    cout << "       help  -h        •      Display help message\n";
+    cout << "       list  -l        •      List items by attributes\n";
+    cout << "       note  -n        •      Create note\n";
+    cout << "       restore  -r     •      Restore from archive\n";
+    cout << "       star  -s        •      Star/unstar item\n";
+    cout << "       task  -t        •      Create task\n";
+    cout << "       copy  -x        •      Copy to clipboard\n";
+    cout << "       clear           •      Clear archive\n"
          << endl;
 }
+
+void Operations::CopyToClipboard(std::string str)
+{
+    auto vec = SplitDigits(std::move(str));
+    if (vec.size() != 1)
+    {
+        Taskbook::fail = true;
+        return;
+    }
+    auto f = find_if(Operations::Tasks.begin(), Operations::Tasks.end(), [&](Task p) { return p.number == vec[0]; });
+    if (f == Operations::Tasks.end())
+    {
+        Taskbook::fail = true;
+        return;
+    }
+    Taskbook::success = true;
+    std::string p ="python3 /home/mert/Git/TaskIT/python/clipboard.py \"" + Operations::Tasks[vec[0]-1].name + "\"";
+    const char * proc = p.c_str();
+    system(proc);
+}
+
 void Operations::Edit(std::string str)
 {
     auto it = find_if(str.begin(), str.end(), [](char p) { return p == ' '; });
@@ -313,7 +336,7 @@ void Operations::Find(const std::string &str)
         return;
     }
 
-    cout << boldred << " オ" << underLinebrightblue << "Found Items" << reset << endl;
+    cout << boldred << " オ" << underLinemagenta << "Found Items" << reset << endl;
     Print::PrintBody(items, true);
     cout << endl;
 }

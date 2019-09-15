@@ -60,15 +60,15 @@ include CMakeFiles/code.dir/flags.make
 CMakeFiles/code.dir/src/ArchiveFileOperations.cpp.o: CMakeFiles/code.dir/flags.make
 CMakeFiles/code.dir/src/ArchiveFileOperations.cpp.o: ../src/ArchiveFileOperations.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mert/Git/TaskIT/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/code.dir/src/ArchiveFileOperations.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/code.dir/src/ArchiveFileOperations.cpp.o -c /home/mert/Git/TaskIT/src/ArchiveFileOperations.cpp
+	/usr/bin/g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/code.dir/src/ArchiveFileOperations.cpp.o -c /home/mert/Git/TaskIT/src/ArchiveFileOperations.cpp
 
 CMakeFiles/code.dir/src/ArchiveFileOperations.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/code.dir/src/ArchiveFileOperations.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/mert/Git/TaskIT/src/ArchiveFileOperations.cpp > CMakeFiles/code.dir/src/ArchiveFileOperations.cpp.i
+	/usr/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/mert/Git/TaskIT/src/ArchiveFileOperations.cpp > CMakeFiles/code.dir/src/ArchiveFileOperations.cpp.i
 
 CMakeFiles/code.dir/src/ArchiveFileOperations.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/code.dir/src/ArchiveFileOperations.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/mert/Git/TaskIT/src/ArchiveFileOperations.cpp -o CMakeFiles/code.dir/src/ArchiveFileOperations.cpp.s
+	/usr/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/mert/Git/TaskIT/src/ArchiveFileOperations.cpp -o CMakeFiles/code.dir/src/ArchiveFileOperations.cpp.s
 
 CMakeFiles/code.dir/src/ArchiveFileOperations.cpp.o.requires:
 
@@ -84,15 +84,15 @@ CMakeFiles/code.dir/src/ArchiveFileOperations.cpp.o.provides.build: CMakeFiles/c
 CMakeFiles/code.dir/src/FileOperations.cpp.o: CMakeFiles/code.dir/flags.make
 CMakeFiles/code.dir/src/FileOperations.cpp.o: ../src/FileOperations.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mert/Git/TaskIT/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/code.dir/src/FileOperations.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/code.dir/src/FileOperations.cpp.o -c /home/mert/Git/TaskIT/src/FileOperations.cpp
+	/usr/bin/g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/code.dir/src/FileOperations.cpp.o -c /home/mert/Git/TaskIT/src/FileOperations.cpp
 
 CMakeFiles/code.dir/src/FileOperations.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/code.dir/src/FileOperations.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/mert/Git/TaskIT/src/FileOperations.cpp > CMakeFiles/code.dir/src/FileOperations.cpp.i
+	/usr/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/mert/Git/TaskIT/src/FileOperations.cpp > CMakeFiles/code.dir/src/FileOperations.cpp.i
 
 CMakeFiles/code.dir/src/FileOperations.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/code.dir/src/FileOperations.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/mert/Git/TaskIT/src/FileOperations.cpp -o CMakeFiles/code.dir/src/FileOperations.cpp.s
+	/usr/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/mert/Git/TaskIT/src/FileOperations.cpp -o CMakeFiles/code.dir/src/FileOperations.cpp.s
 
 CMakeFiles/code.dir/src/FileOperations.cpp.o.requires:
 
@@ -108,15 +108,15 @@ CMakeFiles/code.dir/src/FileOperations.cpp.o.provides.build: CMakeFiles/code.dir
 CMakeFiles/code.dir/src/Operations.cpp.o: CMakeFiles/code.dir/flags.make
 CMakeFiles/code.dir/src/Operations.cpp.o: ../src/Operations.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mert/Git/TaskIT/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/code.dir/src/Operations.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/code.dir/src/Operations.cpp.o -c /home/mert/Git/TaskIT/src/Operations.cpp
+	/usr/bin/g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/code.dir/src/Operations.cpp.o -c /home/mert/Git/TaskIT/src/Operations.cpp
 
 CMakeFiles/code.dir/src/Operations.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/code.dir/src/Operations.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/mert/Git/TaskIT/src/Operations.cpp > CMakeFiles/code.dir/src/Operations.cpp.i
+	/usr/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/mert/Git/TaskIT/src/Operations.cpp > CMakeFiles/code.dir/src/Operations.cpp.i
 
 CMakeFiles/code.dir/src/Operations.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/code.dir/src/Operations.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/mert/Git/TaskIT/src/Operations.cpp -o CMakeFiles/code.dir/src/Operations.cpp.s
+	/usr/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/mert/Git/TaskIT/src/Operations.cpp -o CMakeFiles/code.dir/src/Operations.cpp.s
 
 CMakeFiles/code.dir/src/Operations.cpp.o.requires:
 
@@ -132,15 +132,15 @@ CMakeFiles/code.dir/src/Operations.cpp.o.provides.build: CMakeFiles/code.dir/src
 CMakeFiles/code.dir/src/Print.cpp.o: CMakeFiles/code.dir/flags.make
 CMakeFiles/code.dir/src/Print.cpp.o: ../src/Print.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mert/Git/TaskIT/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/code.dir/src/Print.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/code.dir/src/Print.cpp.o -c /home/mert/Git/TaskIT/src/Print.cpp
+	/usr/bin/g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/code.dir/src/Print.cpp.o -c /home/mert/Git/TaskIT/src/Print.cpp
 
 CMakeFiles/code.dir/src/Print.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/code.dir/src/Print.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/mert/Git/TaskIT/src/Print.cpp > CMakeFiles/code.dir/src/Print.cpp.i
+	/usr/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/mert/Git/TaskIT/src/Print.cpp > CMakeFiles/code.dir/src/Print.cpp.i
 
 CMakeFiles/code.dir/src/Print.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/code.dir/src/Print.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/mert/Git/TaskIT/src/Print.cpp -o CMakeFiles/code.dir/src/Print.cpp.s
+	/usr/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/mert/Git/TaskIT/src/Print.cpp -o CMakeFiles/code.dir/src/Print.cpp.s
 
 CMakeFiles/code.dir/src/Print.cpp.o.requires:
 
@@ -156,15 +156,15 @@ CMakeFiles/code.dir/src/Print.cpp.o.provides.build: CMakeFiles/code.dir/src/Prin
 CMakeFiles/code.dir/src/Program.cpp.o: CMakeFiles/code.dir/flags.make
 CMakeFiles/code.dir/src/Program.cpp.o: ../src/Program.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mert/Git/TaskIT/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/code.dir/src/Program.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/code.dir/src/Program.cpp.o -c /home/mert/Git/TaskIT/src/Program.cpp
+	/usr/bin/g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/code.dir/src/Program.cpp.o -c /home/mert/Git/TaskIT/src/Program.cpp
 
 CMakeFiles/code.dir/src/Program.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/code.dir/src/Program.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/mert/Git/TaskIT/src/Program.cpp > CMakeFiles/code.dir/src/Program.cpp.i
+	/usr/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/mert/Git/TaskIT/src/Program.cpp > CMakeFiles/code.dir/src/Program.cpp.i
 
 CMakeFiles/code.dir/src/Program.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/code.dir/src/Program.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/mert/Git/TaskIT/src/Program.cpp -o CMakeFiles/code.dir/src/Program.cpp.s
+	/usr/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/mert/Git/TaskIT/src/Program.cpp -o CMakeFiles/code.dir/src/Program.cpp.s
 
 CMakeFiles/code.dir/src/Program.cpp.o.requires:
 
@@ -180,15 +180,15 @@ CMakeFiles/code.dir/src/Program.cpp.o.provides.build: CMakeFiles/code.dir/src/Pr
 CMakeFiles/code.dir/src/Taskbook.cpp.o: CMakeFiles/code.dir/flags.make
 CMakeFiles/code.dir/src/Taskbook.cpp.o: ../src/Taskbook.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mert/Git/TaskIT/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/code.dir/src/Taskbook.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/code.dir/src/Taskbook.cpp.o -c /home/mert/Git/TaskIT/src/Taskbook.cpp
+	/usr/bin/g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/code.dir/src/Taskbook.cpp.o -c /home/mert/Git/TaskIT/src/Taskbook.cpp
 
 CMakeFiles/code.dir/src/Taskbook.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/code.dir/src/Taskbook.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/mert/Git/TaskIT/src/Taskbook.cpp > CMakeFiles/code.dir/src/Taskbook.cpp.i
+	/usr/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/mert/Git/TaskIT/src/Taskbook.cpp > CMakeFiles/code.dir/src/Taskbook.cpp.i
 
 CMakeFiles/code.dir/src/Taskbook.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/code.dir/src/Taskbook.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/mert/Git/TaskIT/src/Taskbook.cpp -o CMakeFiles/code.dir/src/Taskbook.cpp.s
+	/usr/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/mert/Git/TaskIT/src/Taskbook.cpp -o CMakeFiles/code.dir/src/Taskbook.cpp.s
 
 CMakeFiles/code.dir/src/Taskbook.cpp.o.requires:
 

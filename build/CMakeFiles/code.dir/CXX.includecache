@@ -97,6 +97,8 @@ string
 -
 Color.h
 /home/mert/Git/TaskIT/src/Color.h
+cstdlib
+-
 iostream
 -
 fstream

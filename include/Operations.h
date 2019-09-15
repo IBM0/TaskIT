@@ -21,6 +21,7 @@ public:
     void SendToArchive(Task);
     void Restore(std::string);
     static void Help();
+    static void CopyToClipboard(std::string);
     static void Clear();
     void RemoveTask(std::string);
     void Star(std::string);
