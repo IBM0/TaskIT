@@ -20,6 +20,10 @@ string
 TaskStat_Enum.h
 ../include/TaskStat_Enum.h
 
+../include/Notebook.h
+string
+-
+
 ../include/Op_Enum.h
 
 ../include/Operations.h
@@ -49,6 +53,8 @@ string
 -
 Op_Enum.h
 ../include/Op_Enum.h
+vector
+-
 
 ../include/pathInfo.h
 string
@@ -89,6 +95,16 @@ Operations.h
 /home/mert/Git/TaskIT/src/Operations.h
 pathInfo.h
 /home/mert/Git/TaskIT/src/pathInfo.h
+
+/home/mert/Git/TaskIT/src/Notebook.cpp
+Notebook.h
+/home/mert/Git/TaskIT/src/Notebook.h
+Operations.h
+/home/mert/Git/TaskIT/src/Operations.h
+iostream
+-
+algorithm
+-
 
 /home/mert/Git/TaskIT/src/Operations.cpp
 utility
@@ -163,4 +179,6 @@ ArchiveFileOperations.h
 /home/mert/Git/TaskIT/src/ArchiveFileOperations.h
 unistd.h
 -
+Notebook.h
+/home/mert/Git/TaskIT/src/Notebook.h
 

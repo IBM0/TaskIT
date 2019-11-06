@@ -9,11 +9,14 @@
 #include "pathInfo.h"
 #include "ArchiveFileOperations.h"
 #include <unistd.h>
+#include "Notebook.h"
 using namespace std;
 
 bool Taskbook::print = true;
+std::string Taskbook::fall_back = "";
 bool Taskbook::success = false;
 bool Taskbook::fail = false;
+std::string Taskbook::label;
 std::string UserName;
 std::string dataPath;
 std::string ArchivePath;
@@ -26,13 +29,62 @@ void Taskbook::SetPaths()
     ArchivePath = "/home/" + UserName + "/.taskbook/archive.txt";
 }
 
-void Taskbook::ManageTaskbook()
+void Taskbook::ManageTaskbook(const std::string argv) // notebook version
+{
+    label = argv;
+    Notebook::ReadLabel(label);
+    Print::CountVector(Operations::notebookTasks);
+
+    while (true)
+    {
+        pair<Op_Enum, string> inputPair;
+        string input;
+
+        if (print)
+        {
+            Print::PrintTasks(Operations::notebookTasks, false, label);
+        }
+        input = TakeInput();
+        if (input == "")
+        {
+            cout << "\n";
+            print = true;
+            continue;
+        }
+
+        if (input == "exit")
+        {
+            fall_back = "exit";
+            return;
+        }
+
+        print = true;
+        inputPair = ParseInput(input);
+        if (inputPair.first != Op_Enum::Nil)
+        {
+            if (ManageCommand_Notebook(inputPair, label))
+            {
+                Notebook::ReadLabel(label);
+                Print::CountVector(Operations::notebookTasks);
+            }
+            if (!fall_back.empty())
+            {
+                return;
+            }
+        }
+    }
+}
+
+void Taskbook::Startexe()
 {
     SetPaths();
     FileOperations::ReadFromFile();
     ArchiveFileOperations::ReadArchive();
-    Print::CountVector(Operations::Tasks);
+}
 
+void Taskbook::ManageTaskbook()
+{
+    Print::CountVector(Operations::Tasks);
     while (true)
     {
         pair<Op_Enum, string> inputPair;
@@ -51,7 +103,10 @@ void Taskbook::ManageTaskbook()
         }
 
         if (input == "exit")
+        {
+            fall_back = "exit";
             return;
+        }
 
         if (input == "clear")
             Operations::Clear();
@@ -61,6 +116,10 @@ void Taskbook::ManageTaskbook()
         if (inputPair.first != Op_Enum::Nil)
         {
             ManageCommand(inputPair);
+            if (!fall_back.empty())
+            {
+                return;
+            }
         }
     }
 }
@@ -88,6 +147,75 @@ string Taskbook::TakeInput()
     return input;
 }
 
+bool Taskbook::ManageCommand_Notebook(const std::pair<Op_Enum, std::string> &inputPair, const std::string &label)
+{
+    Operations makeOperation;
+    switch (inputPair.first)
+    {
+    case Op_Enum::add:
+        makeOperation.AddTask(inputPair.second, TaskStat_Enum::undone, label);
+        break;
+
+    case Op_Enum::add_note:
+        makeOperation.AddTask(inputPair.second, TaskStat_Enum::note, label);
+        break;
+
+    case Op_Enum::check:
+        makeOperation.Check(inputPair.second);
+        break;
+
+    case Op_Enum::begin:
+        makeOperation.Begin(inputPair.second);
+        break;
+
+    case Op_Enum::remove:
+        makeOperation.RemoveTask(inputPair.second);
+        break;
+
+    case Op_Enum::edit:
+        makeOperation.Edit(inputPair.second);
+        break;
+
+    case Op_Enum::star:
+        makeOperation.Star(inputPair.second);
+        break;
+
+    case Op_Enum::help:
+        makeOperation.Help_Notebook();
+        print = false;
+        return false;
+
+    case Op_Enum::copy:
+        makeOperation.CopyToClipboard(inputPair.second);
+        return false;
+
+    case Op_Enum::find:
+        print = false;
+        makeOperation.Find(inputPair.second);
+        return false;
+
+    case Op_Enum::sw:
+        if (!inputPair.second.empty())
+        {
+            fall_back = inputPair.second;
+            return false;
+        }
+        fall_back = "default";
+        return false;
+
+    case Op_Enum::clear:
+    case Op_Enum::list:
+    case Op_Enum::archive:
+    case Op_Enum::restore:
+        fail = true;
+        break;
+
+    case Op_Enum::Nil:
+        return false;
+    }
+    return true;
+}
+
 void Taskbook::ManageCommand(const std::pair<Op_Enum, std::string> &inputPair)
 {
     Operations makeOperation;
@@ -95,6 +223,11 @@ void Taskbook::ManageCommand(const std::pair<Op_Enum, std::string> &inputPair)
     {
     case Op_Enum::add:
         makeOperation.AddTask(inputPair.second, TaskStat_Enum::undone);
+        break;
+
+    case Op_Enum::sw:
+        // makeOperation.Switch(inputPair.second);
+        fall_back = inputPair.second;
         break;
 
     case Op_Enum::add_note:
@@ -144,13 +277,13 @@ void Taskbook::ManageCommand(const std::pair<Op_Enum, std::string> &inputPair)
         print = false;
         break;
 
+    case Op_Enum::restore:
+        makeOperation.Restore(inputPair.second);
+        break;
+
     case Op_Enum::find:
         print = false;
         makeOperation.Find(inputPair.second);
-        break;
-
-    case Op_Enum::restore:
-        makeOperation.Restore(inputPair.second);
         break;
 
     case Op_Enum::Nil:
@@ -207,6 +340,9 @@ std::pair<Op_Enum, std::string> Taskbook::ParseInput(string inputstr)
 
     else if (shortcut == "-a" || shortcut == "archive")
         operationName = Op_Enum::archive;
+
+    else if (shortcut == "sw")
+        operationName = Op_Enum::sw;
 
     else if (shortcut == "-l" || shortcut == "list")
         operationName = Op_Enum::list;

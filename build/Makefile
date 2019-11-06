@@ -177,6 +177,33 @@ src/FileOperations.cpp.s:
 	$(MAKE) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/src/FileOperations.cpp.s
 .PHONY : src/FileOperations.cpp.s
 
+src/Notebook.o: src/Notebook.cpp.o
+
+.PHONY : src/Notebook.o
+
+# target to build an object file
+src/Notebook.cpp.o:
+	$(MAKE) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/src/Notebook.cpp.o
+.PHONY : src/Notebook.cpp.o
+
+src/Notebook.i: src/Notebook.cpp.i
+
+.PHONY : src/Notebook.i
+
+# target to preprocess a source file
+src/Notebook.cpp.i:
+	$(MAKE) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/src/Notebook.cpp.i
+.PHONY : src/Notebook.cpp.i
+
+src/Notebook.s: src/Notebook.cpp.s
+
+.PHONY : src/Notebook.s
+
+# target to generate assembly for a file
+src/Notebook.cpp.s:
+	$(MAKE) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/src/Notebook.cpp.s
+.PHONY : src/Notebook.cpp.s
+
 src/Operations.o: src/Operations.cpp.o
 
 .PHONY : src/Operations.o
@@ -300,6 +327,9 @@ help:
 	@echo "... src/FileOperations.o"
 	@echo "... src/FileOperations.i"
 	@echo "... src/FileOperations.s"
+	@echo "... src/Notebook.o"
+	@echo "... src/Notebook.i"
+	@echo "... src/Notebook.s"
 	@echo "... src/Operations.o"
 	@echo "... src/Operations.i"
 	@echo "... src/Operations.s"

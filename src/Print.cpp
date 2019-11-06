@@ -91,37 +91,37 @@ void Print::PrintTasks(const std::vector<Task> &vec, bool isprint = true, std::s
         percent = ((doneCount * 100) / size);
     }
 
-    if (isprint)
-    {
-        cout << boldred << " ♥ ";
-        cout << underLinemagenta
-             << name << reset << gray << " [" << doneCount << "/" << size << "]" << reset << endl;
-    }
-    else
-    {
-        cout << "  " << boldblue
-             << name << gray << " [" << doneCount << "/" << size << "]" << reset << endl;
-    }
+    // if (isprint)
+    // {
+    cout << boldred << " ♥ ";
+    cout << underLinemagenta
+         << name << reset << gray << " [" << doneCount << "/" << size << "]" << reset << endl;
+    // }
+    // else
+    // {
+    //     cout << "  " << boldmagenta
+    //          << name << gray << " [" << doneCount << "/" << size << "]" << reset << endl;
+    // }
 
     PrintBody(vec, isprint);
 
-    if (isprint)
-    {
+    // if (isprint)
+    // {
 
-        cout << "\n " << gray << percent << "% of all tasks completed\n"
-             << reset;
-        cout << " " << boldyellow << doneCount << reset << gray << " done · " << reset
-             << boldorange << inprogress << reset << gray << " in-progress · " << reset
-             << boldmagenta << undoneCount << reset << gray << " pending" << reset
-             << " · " << boldblue << note << reset << gray << " notes\n"
-             << reset
-             << endl;
-    }
+    cout << "\n " << gray << percent << "% of all tasks completed\n"
+         << reset;
+    cout << " " << boldyellow << doneCount << reset << gray << " done · " << reset
+         << boldorange << inprogress << reset << gray << " in-progress · " << reset
+         << boldmagenta << undoneCount << reset << gray << " pending" << reset
+         << " · " << boldblue << note << reset << gray << " notes\n"
+         << reset
+         << endl;
+    // }
 }
 
 void Print::PrintArchive()
 {
-    cout << boldred << " ネ" << underLinebrightblue
+    cout << boldred << " ネ" << underLinemagenta
          << "Archive" << reset << endl;
 
     PrintBody(Operations::ArchiveTasks, true);

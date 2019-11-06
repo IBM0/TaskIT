@@ -7,6 +7,7 @@ enum class Op_Enum
     star,
     clear,
     find,
+    sw,
     restore,
     edit,
     help,

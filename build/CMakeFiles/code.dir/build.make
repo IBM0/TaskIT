@@ -105,9 +105,33 @@ CMakeFiles/code.dir/src/FileOperations.cpp.o.provides: CMakeFiles/code.dir/src/F
 CMakeFiles/code.dir/src/FileOperations.cpp.o.provides.build: CMakeFiles/code.dir/src/FileOperations.cpp.o
 
 
+CMakeFiles/code.dir/src/Notebook.cpp.o: CMakeFiles/code.dir/flags.make
+CMakeFiles/code.dir/src/Notebook.cpp.o: ../src/Notebook.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mert/Git/TaskIT/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/code.dir/src/Notebook.cpp.o"
+	/usr/bin/g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/code.dir/src/Notebook.cpp.o -c /home/mert/Git/TaskIT/src/Notebook.cpp
+
+CMakeFiles/code.dir/src/Notebook.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/code.dir/src/Notebook.cpp.i"
+	/usr/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/mert/Git/TaskIT/src/Notebook.cpp > CMakeFiles/code.dir/src/Notebook.cpp.i
+
+CMakeFiles/code.dir/src/Notebook.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/code.dir/src/Notebook.cpp.s"
+	/usr/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/mert/Git/TaskIT/src/Notebook.cpp -o CMakeFiles/code.dir/src/Notebook.cpp.s
+
+CMakeFiles/code.dir/src/Notebook.cpp.o.requires:
+
+.PHONY : CMakeFiles/code.dir/src/Notebook.cpp.o.requires
+
+CMakeFiles/code.dir/src/Notebook.cpp.o.provides: CMakeFiles/code.dir/src/Notebook.cpp.o.requires
+	$(MAKE) -f CMakeFiles/code.dir/build.make CMakeFiles/code.dir/src/Notebook.cpp.o.provides.build
+.PHONY : CMakeFiles/code.dir/src/Notebook.cpp.o.provides
+
+CMakeFiles/code.dir/src/Notebook.cpp.o.provides.build: CMakeFiles/code.dir/src/Notebook.cpp.o
+
+
 CMakeFiles/code.dir/src/Operations.cpp.o: CMakeFiles/code.dir/flags.make
 CMakeFiles/code.dir/src/Operations.cpp.o: ../src/Operations.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mert/Git/TaskIT/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/code.dir/src/Operations.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mert/Git/TaskIT/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/code.dir/src/Operations.cpp.o"
 	/usr/bin/g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/code.dir/src/Operations.cpp.o -c /home/mert/Git/TaskIT/src/Operations.cpp
 
 CMakeFiles/code.dir/src/Operations.cpp.i: cmake_force
@@ -131,7 +155,7 @@ CMakeFiles/code.dir/src/Operations.cpp.o.provides.build: CMakeFiles/code.dir/src
 
 CMakeFiles/code.dir/src/Print.cpp.o: CMakeFiles/code.dir/flags.make
 CMakeFiles/code.dir/src/Print.cpp.o: ../src/Print.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mert/Git/TaskIT/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/code.dir/src/Print.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mert/Git/TaskIT/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/code.dir/src/Print.cpp.o"
 	/usr/bin/g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/code.dir/src/Print.cpp.o -c /home/mert/Git/TaskIT/src/Print.cpp
 
 CMakeFiles/code.dir/src/Print.cpp.i: cmake_force
@@ -155,7 +179,7 @@ CMakeFiles/code.dir/src/Print.cpp.o.provides.build: CMakeFiles/code.dir/src/Prin
 
 CMakeFiles/code.dir/src/Program.cpp.o: CMakeFiles/code.dir/flags.make
 CMakeFiles/code.dir/src/Program.cpp.o: ../src/Program.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mert/Git/TaskIT/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/code.dir/src/Program.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mert/Git/TaskIT/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/code.dir/src/Program.cpp.o"
 	/usr/bin/g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/code.dir/src/Program.cpp.o -c /home/mert/Git/TaskIT/src/Program.cpp
 
 CMakeFiles/code.dir/src/Program.cpp.i: cmake_force
@@ -179,7 +203,7 @@ CMakeFiles/code.dir/src/Program.cpp.o.provides.build: CMakeFiles/code.dir/src/Pr
 
 CMakeFiles/code.dir/src/Taskbook.cpp.o: CMakeFiles/code.dir/flags.make
 CMakeFiles/code.dir/src/Taskbook.cpp.o: ../src/Taskbook.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mert/Git/TaskIT/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/code.dir/src/Taskbook.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mert/Git/TaskIT/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/code.dir/src/Taskbook.cpp.o"
 	/usr/bin/g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/code.dir/src/Taskbook.cpp.o -c /home/mert/Git/TaskIT/src/Taskbook.cpp
 
 CMakeFiles/code.dir/src/Taskbook.cpp.i: cmake_force
@@ -205,6 +229,7 @@ CMakeFiles/code.dir/src/Taskbook.cpp.o.provides.build: CMakeFiles/code.dir/src/T
 code_OBJECTS = \
 "CMakeFiles/code.dir/src/ArchiveFileOperations.cpp.o" \
 "CMakeFiles/code.dir/src/FileOperations.cpp.o" \
+"CMakeFiles/code.dir/src/Notebook.cpp.o" \
 "CMakeFiles/code.dir/src/Operations.cpp.o" \
 "CMakeFiles/code.dir/src/Print.cpp.o" \
 "CMakeFiles/code.dir/src/Program.cpp.o" \
@@ -215,13 +240,14 @@ code_EXTERNAL_OBJECTS =
 
 code: CMakeFiles/code.dir/src/ArchiveFileOperations.cpp.o
 code: CMakeFiles/code.dir/src/FileOperations.cpp.o
+code: CMakeFiles/code.dir/src/Notebook.cpp.o
 code: CMakeFiles/code.dir/src/Operations.cpp.o
 code: CMakeFiles/code.dir/src/Print.cpp.o
 code: CMakeFiles/code.dir/src/Program.cpp.o
 code: CMakeFiles/code.dir/src/Taskbook.cpp.o
 code: CMakeFiles/code.dir/build.make
 code: CMakeFiles/code.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/mert/Git/TaskIT/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable code"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/mert/Git/TaskIT/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable code"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/code.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -231,6 +257,7 @@ CMakeFiles/code.dir/build: code
 
 CMakeFiles/code.dir/requires: CMakeFiles/code.dir/src/ArchiveFileOperations.cpp.o.requires
 CMakeFiles/code.dir/requires: CMakeFiles/code.dir/src/FileOperations.cpp.o.requires
+CMakeFiles/code.dir/requires: CMakeFiles/code.dir/src/Notebook.cpp.o.requires
 CMakeFiles/code.dir/requires: CMakeFiles/code.dir/src/Operations.cpp.o.requires
 CMakeFiles/code.dir/requires: CMakeFiles/code.dir/src/Print.cpp.o.requires
 CMakeFiles/code.dir/requires: CMakeFiles/code.dir/src/Program.cpp.o.requires

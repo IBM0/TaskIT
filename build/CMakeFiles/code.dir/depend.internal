@@ -18,6 +18,13 @@ CMakeFiles/code.dir/src/FileOperations.cpp.o
  ../include/TaskStat_Enum.h
  ../include/pathInfo.h
  /home/mert/Git/TaskIT/src/FileOperations.cpp
+CMakeFiles/code.dir/src/Notebook.cpp.o
+ ../include/Notebook.h
+ ../include/Operations.h
+ ../include/Print.h
+ ../include/Task.h
+ ../include/TaskStat_Enum.h
+ /home/mert/Git/TaskIT/src/Notebook.cpp
 CMakeFiles/code.dir/src/Operations.cpp.o
  ../include/ArchiveFileOperations.h
  ../include/Color.h
@@ -46,6 +53,7 @@ CMakeFiles/code.dir/src/Taskbook.cpp.o
  ../include/ArchiveFileOperations.h
  ../include/Color.h
  ../include/FileOperations.h
+ ../include/Notebook.h
  ../include/Op_Enum.h
  ../include/Operations.h
  ../include/Print.h

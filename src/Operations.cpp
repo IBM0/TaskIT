@@ -15,6 +15,7 @@
 using namespace std;
 
 std::vector<Task> Operations::Tasks;
+std::vector<Task> Operations::notebookTasks;
 std::vector<Task> Operations::ArchiveTasks;
 
 int Operations::GetNewNum()
@@ -200,6 +201,25 @@ void Operations::Help()
          << endl;
 }
 
+void Operations::Help_Notebook()
+{
+    cout << " Usage" << endl;
+    cout << "   Taskbook: [<options> ...]\n\n";
+    cout << "   Options\n";
+    cout << "       none            •      Display board view\n";
+    cout << "       begin  -b       •      Start/pause task\n";
+    cout << "       check  -c       •      Check/uncheck task\n";
+    cout << "       delete  -d      •      Delete item\n";
+    cout << "       edit  -e        •      Edit item description\n";
+    cout << "       find  -f        •      Search for items\n";
+    cout << "       help  -h        •      Display help message\n";
+    cout << "       note  -n        •      Create note\n";
+    cout << "       star  -s        •      Star/unstar item\n";
+    cout << "       task  -t        •      Create task\n";
+    cout << "       copy  -x        •      Copy to clipboard\n"
+         << endl;
+}
+
 void Operations::CopyToClipboard(std::string str)
 {
     auto vec = SplitDigits(std::move(str));
@@ -215,8 +235,8 @@ void Operations::CopyToClipboard(std::string str)
         return;
     }
     Taskbook::success = true;
-    std::string p ="python3 /home/mert/Git/TaskIT/python/clipboard.py \"" + Operations::Tasks[vec[0]-1].name + "\"";
-    const char * proc = p.c_str();
+    std::string p = "python3 /home/mert/Git/TaskIT/python/clipboard.py \"" + Operations::Tasks[vec[0] - 1].name + "\"";
+    const char *proc = p.c_str();
     system(proc);
 }
 
@@ -252,7 +272,7 @@ void Operations::Edit(std::string str)
     FileOperations::WriteToFile();
 }
 
-void Operations::AddTask(const std::string &taskName, TaskStat_Enum stat)
+void Operations::AddTask(const std::string &taskName, TaskStat_Enum stat, const std::string &label)
 {
     if (taskName.empty())
     {
@@ -276,7 +296,6 @@ void Operations::AddTask(const std::string &taskName, TaskStat_Enum stat)
             Taskbook::fail = true;
             return;
         }
-
         newTask.notebook = Taskbook::Trim(string(it, taskName.end()));
         if (newTask.notebook == "")
         {
@@ -289,6 +308,10 @@ void Operations::AddTask(const std::string &taskName, TaskStat_Enum stat)
     {
         newTask.name = taskName;
         newTask.notebook = "My Board";
+    }
+    if (label != "")
+    {
+        newTask.notebook = label;
     }
 
     Tasks.push_back(newTask);

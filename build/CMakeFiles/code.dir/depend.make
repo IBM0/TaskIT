@@ -18,6 +18,13 @@ CMakeFiles/code.dir/src/FileOperations.cpp.o: ../include/TaskStat_Enum.h
 CMakeFiles/code.dir/src/FileOperations.cpp.o: ../include/pathInfo.h
 CMakeFiles/code.dir/src/FileOperations.cpp.o: ../src/FileOperations.cpp
 
+CMakeFiles/code.dir/src/Notebook.cpp.o: ../include/Notebook.h
+CMakeFiles/code.dir/src/Notebook.cpp.o: ../include/Operations.h
+CMakeFiles/code.dir/src/Notebook.cpp.o: ../include/Print.h
+CMakeFiles/code.dir/src/Notebook.cpp.o: ../include/Task.h
+CMakeFiles/code.dir/src/Notebook.cpp.o: ../include/TaskStat_Enum.h
+CMakeFiles/code.dir/src/Notebook.cpp.o: ../src/Notebook.cpp
+
 CMakeFiles/code.dir/src/Operations.cpp.o: ../include/ArchiveFileOperations.h
 CMakeFiles/code.dir/src/Operations.cpp.o: ../include/Color.h
 CMakeFiles/code.dir/src/Operations.cpp.o: ../include/FileOperations.h
@@ -45,6 +52,7 @@ CMakeFiles/code.dir/src/Program.cpp.o: ../src/Program.cpp
 CMakeFiles/code.dir/src/Taskbook.cpp.o: ../include/ArchiveFileOperations.h
 CMakeFiles/code.dir/src/Taskbook.cpp.o: ../include/Color.h
 CMakeFiles/code.dir/src/Taskbook.cpp.o: ../include/FileOperations.h
+CMakeFiles/code.dir/src/Taskbook.cpp.o: ../include/Notebook.h
 CMakeFiles/code.dir/src/Taskbook.cpp.o: ../include/Op_Enum.h
 CMakeFiles/code.dir/src/Taskbook.cpp.o: ../include/Operations.h
 CMakeFiles/code.dir/src/Taskbook.cpp.o: ../include/Print.h

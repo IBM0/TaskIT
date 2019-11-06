@@ -6,6 +6,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/mert/Git/TaskIT/src/ArchiveFileOperations.cpp" "/home/mert/Git/TaskIT/build/CMakeFiles/code.dir/src/ArchiveFileOperations.cpp.o"
   "/home/mert/Git/TaskIT/src/FileOperations.cpp" "/home/mert/Git/TaskIT/build/CMakeFiles/code.dir/src/FileOperations.cpp.o"
+  "/home/mert/Git/TaskIT/src/Notebook.cpp" "/home/mert/Git/TaskIT/build/CMakeFiles/code.dir/src/Notebook.cpp.o"
   "/home/mert/Git/TaskIT/src/Operations.cpp" "/home/mert/Git/TaskIT/build/CMakeFiles/code.dir/src/Operations.cpp.o"
   "/home/mert/Git/TaskIT/src/Print.cpp" "/home/mert/Git/TaskIT/build/CMakeFiles/code.dir/src/Print.cpp.o"
   "/home/mert/Git/TaskIT/src/Program.cpp" "/home/mert/Git/TaskIT/build/CMakeFiles/code.dir/src/Program.cpp.o"
