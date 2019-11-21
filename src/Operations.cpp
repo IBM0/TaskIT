@@ -3,6 +3,7 @@
 #include "Color.h"
 #include <cstdlib>
 #include <iostream>
+#include <sstream>
 #include <fstream>
 #include <set>
 #include <algorithm>
@@ -144,80 +145,82 @@ void Operations::Check(std::string str)
 
 std::vector<int> Operations::SplitDigits(std::string str)
 {
-    vector<string> numbers;
-    auto it = str.begin();
-    string temp;
-    while (it != str.end())
+    std::istringstream iss(str);
+    vector<string> tokens{istream_iterator<string>{iss},
+                          istream_iterator<string>{}};
+    std::vector<int> numbers;
+    try
     {
-        if (isdigit(*it))
-        {
-            temp = temp + (*it);
-        }
-        else if (*it == ' ')
-        {
-            if (!temp.empty())
-            {
-                numbers.push_back(temp);
-            }
-            temp = "";
-        }
-        else
-        {
-            Taskbook::fail = true;
-            return {};
-        }
-        it++;
-    }
-    if (!temp.empty())
-        numbers.push_back(temp);
 
-    vector<int> allnumbers;
-    sort(numbers.begin(), numbers.end());
+        std::vector<std::__cxx11::string>::iterator it;
+        while ((it = std::find_if(tokens.begin(), tokens.end(), [](std::string item) { return item.find('-') != std::string::npos; })) != tokens.end())
+        {
+            auto pos = (*it).find("-");
+            int first = stoi(tokens[it - tokens.begin()].substr(0, pos));
+            int second = stoi(tokens[it - tokens.begin()].substr(pos + 1));
+            for (int i = first; i <= second; i++)
+            {
+                numbers.push_back(i);
+            }
+
+            tokens.erase(it);
+        }
+        for (int i = 0; i < tokens.size(); i++)
+        {
+            numbers.push_back(stoi(tokens[i]));
+        }
+    }
+    catch (const std::exception &e)
+    {
+        Taskbook::fail = true;
+        return {};
+    }
+
+    std::sort(numbers.begin(), numbers.end());
     numbers.erase(unique(numbers.begin(), numbers.end()), numbers.end());
-    transform(numbers.begin(), numbers.end(), back_inserter(allnumbers), [](string p) { return stoi(p); });
-    return allnumbers;
+    return numbers;
 }
 
 void Operations::Help()
 {
-    cout << " Usage" << endl;
-    cout << "   Taskbook: [<options> ...]\n\n";
-    cout << "   Options\n";
-    cout << "       none            •      Display board view\n";
-    cout << "       archive  -a     •      Display archived items\n";
-    cout << "       begin  -b       •      Start/pause task\n";
-    cout << "       check  -c       •      Check/uncheck task\n";
-    cout << "       delete  -d      •      Delete item\n";
-    cout << "       edit  -e        •      Edit item description\n";
-    cout << "       find  -f        •      Search for items\n";
-    cout << "       help  -h        •      Display help message\n";
-    cout << "       list  -l        •      List items by attributes\n";
-    cout << "       note  -n        •      Create note\n";
-    cout << "       restore  -r     •      Restore from archive\n";
-    cout << "       star  -s        •      Star/unstar item\n";
-    cout << "       task  -t        •      Create task\n";
-    cout << "       copy  -x        •      Copy to clipboard\n";
-    cout << "       clear           •      Clear archive\n"
-         << endl;
+    std::cout << " Usage" << endl;
+    std::cout << "   Taskbook: [<options> ...]\n\n";
+    std::cout << "   Options\n";
+    std::cout << "       none            •      Display board view\n";
+    std::cout << "       archive  -a     •      Display archived items\n";
+    std::cout << "       begin  -b       •      Start/pause task\n";
+    std::cout << "       check  -c       •      Check/uncheck task\n";
+    std::cout << "       delete  -d      •      Delete item\n";
+    std::cout << "       edit  -e        •      Edit item description\n";
+    std::cout << "       find  -f        •      Search for items\n";
+    std::cout << "       help  -h        •      Display help message\n";
+    std::cout << "       list  -l        •      List items by attributes\n";
+    std::cout << "       note  -n        •      Create note\n";
+    std::cout << "       restore  -r     •      Restore from archive\n";
+    std::cout << "       star  -s        •      Star/unstar item\n";
+    std::cout << "       task  -t        •      Create task\n";
+    std::cout << "       copy  -x        •      Copy to clipboard\n";
+    std::cout << "       clear           •      Clear archive\n"
+              << endl;
 }
 
 void Operations::Help_Notebook()
 {
-    cout << " Usage" << endl;
-    cout << "   Taskbook: [<options> ...]\n\n";
-    cout << "   Options\n";
-    cout << "       none            •      Display board view\n";
-    cout << "       begin  -b       •      Start/pause task\n";
-    cout << "       check  -c       •      Check/uncheck task\n";
-    cout << "       delete  -d      •      Delete item\n";
-    cout << "       edit  -e        •      Edit item description\n";
-    cout << "       find  -f        •      Search for items\n";
-    cout << "       help  -h        •      Display help message\n";
-    cout << "       note  -n        •      Create note\n";
-    cout << "       star  -s        •      Star/unstar item\n";
-    cout << "       task  -t        •      Create task\n";
-    cout << "       copy  -x        •      Copy to clipboard\n"
-         << endl;
+    std::cout << " Usage" << endl;
+    std::cout << "   Taskbook: [<options> ...]\n\n";
+    std::cout << "   Options\n";
+    std::cout << "       none            •      Display board view\n";
+    std::cout << "       begin  -b       •      Start/pause task\n";
+    std::cout << "       check  -c       •      Check/uncheck task\n";
+    std::cout << "       delete  -d      •      Delete item\n";
+    std::cout << "       edit  -e        •      Edit item description\n";
+    std::cout << "       find  -f        •      Search for items\n";
+    std::cout << "       help  -h        •      Display help message\n";
+    std::cout << "       note  -n        •      Create note\n";
+    std::cout << "       star  -s        •      Star/unstar item\n";
+    std::cout << "       task  -t        •      Create task\n";
+    std::cout << "       copy  -x        •      Copy to clipboard\n"
+              << endl;
 }
 
 void Operations::CopyToClipboard(std::string str)
@@ -359,9 +362,9 @@ void Operations::Find(const std::string &str)
         return;
     }
 
-    cout << boldred << " オ" << underLinemagenta << "Found Items" << reset << endl;
+    std::cout << boldred << " オ" << underLinemagenta << "Found Items" << reset << endl;
     Print::PrintBody(items, true);
-    cout << endl;
+    std::cout << endl;
 }
 
 set<string> Operations::NotebookSplit(string str)
@@ -402,7 +405,7 @@ void Operations::IterateNotebooks(const std::set<std::string> &myset)
         copy_if(Tasks.begin(), Tasks.end(), back_inserter(temp), [&](Task p) { return p.notebook == i; });
         Print::CountVector(temp);
         Print::PrintTasks(temp, false, "@" + i);
-        cout << endl;
+        std::cout << endl;
     }
 }
 
@@ -411,7 +414,7 @@ void Operations::List(string str)
     if (str.empty())
     {
         set<string> myset;
-        transform(Tasks.begin(), Tasks.end(), inserter(myset, myset.begin()), [](Task p) { return p.notebook; });
+        std::transform(Tasks.begin(), Tasks.end(), inserter(myset, myset.begin()), [](Task p) { return p.notebook; });
         IterateNotebooks(myset);
         Print::CountVector(Tasks);
         return;

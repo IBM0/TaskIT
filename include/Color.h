@@ -1,5 +1,4 @@
 #include <string>
-
 //1 bolds
 //2 fade
 //3 italic

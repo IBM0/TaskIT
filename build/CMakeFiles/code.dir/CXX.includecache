@@ -117,6 +117,8 @@ cstdlib
 -
 iostream
 -
+sstream
+-
 fstream
 -
 set

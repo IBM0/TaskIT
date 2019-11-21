@@ -91,22 +91,12 @@ void Print::PrintTasks(const std::vector<Task> &vec, bool isprint = true, std::s
         percent = ((doneCount * 100) / size);
     }
 
-    // if (isprint)
-    // {
     cout << boldred << " ♥ ";
     cout << underLinemagenta
          << name << reset << gray << " [" << doneCount << "/" << size << "]" << reset << endl;
-    // }
-    // else
-    // {
-    //     cout << "  " << boldmagenta
-    //          << name << gray << " [" << doneCount << "/" << size << "]" << reset << endl;
-    // }
 
     PrintBody(vec, isprint);
 
-    // if (isprint)
-    // {
 
     cout << "\n " << gray << percent << "% of all tasks completed\n"
          << reset;
@@ -116,7 +106,6 @@ void Print::PrintTasks(const std::vector<Task> &vec, bool isprint = true, std::s
          << " · " << boldblue << note << reset << gray << " notes\n"
          << reset
          << endl;
-    // }
 }
 
 void Print::PrintArchive()

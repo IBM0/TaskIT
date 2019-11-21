@@ -4,7 +4,7 @@
 class Taskbook
 {
 private:
-    static std::pair<Op_Enum, std::string> ParseInput(std::string);
+    static std::pair<Op_Enum, std::string> ParseInput(const std::string & );
     static void ManageCommand(const std::pair<Op_Enum, std::string> &);
     static bool ManageCommand_Notebook(const std::pair<Op_Enum, std::string> &, const std::string &label);
     static void SetPaths();
@@ -13,6 +13,7 @@ private:
 public:
     static std::string Trim(std::string);
     static bool success;
+    static std::string aa;
     static bool print;
     static bool fail;
     static std::string fall_back;

@@ -13,9 +13,9 @@
 using namespace std;
 
 bool Taskbook::print = true;
-std::string Taskbook::fall_back = "";
 bool Taskbook::success = false;
 bool Taskbook::fail = false;
+std::string Taskbook::fall_back = "";
 std::string Taskbook::label;
 std::string UserName;
 std::string dataPath;
@@ -124,7 +124,7 @@ void Taskbook::ManageTaskbook()
     }
 }
 
-string Taskbook::TakeInput()
+std::string Taskbook::TakeInput()
 {
     string input;
     if (success)
@@ -190,8 +190,8 @@ bool Taskbook::ManageCommand_Notebook(const std::pair<Op_Enum, std::string> &inp
         return false;
 
     case Op_Enum::find:
-        print = false;
         makeOperation.Find(inputPair.second);
+        print = false;
         return false;
 
     case Op_Enum::sw:
@@ -226,7 +226,6 @@ void Taskbook::ManageCommand(const std::pair<Op_Enum, std::string> &inputPair)
         break;
 
     case Op_Enum::sw:
-        // makeOperation.Switch(inputPair.second);
         fall_back = inputPair.second;
         break;
 
@@ -291,9 +290,8 @@ void Taskbook::ManageCommand(const std::pair<Op_Enum, std::string> &inputPair)
     }
 }
 
-std::pair<Op_Enum, std::string> Taskbook::ParseInput(string inputstr)
+std::pair<Op_Enum, std::string> Taskbook::ParseInput(const std::string & inputstr)
 {
-    inputstr = inputstr;
     Op_Enum operationName;
     string parsed;
     string shortcut;
@@ -310,7 +308,7 @@ std::pair<Op_Enum, std::string> Taskbook::ParseInput(string inputstr)
             break;
     }
     shortcut = string(untilSpace.begin(), untilSpace.end());
-    parsed = string(it, inputstr.end());
+    parsed = string(it,inputstr.end());
     parsed = Trim(parsed);
 
     cout << endl;
