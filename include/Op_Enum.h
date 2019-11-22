@@ -2,6 +2,7 @@ enum class Op_Enum
 {
     Nil, // no operation
     add,
+    move,
     copy,
     check,
     star,

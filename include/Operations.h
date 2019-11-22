@@ -19,6 +19,9 @@ public:
     void Begin(std::string);
     static void Find(const std::string &);
     static void Edit(std::string);
+    static void Move(std::string);
+    void Edit_inNotebook(std::string);
+    static bool is_number(const std::string& s);
     static void Swit(const std::string &);
     void SendToArchive(Task);
     void Restore(std::string);

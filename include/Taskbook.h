@@ -8,9 +8,9 @@ private:
     static void ManageCommand(const std::pair<Op_Enum, std::string> &);
     static bool ManageCommand_Notebook(const std::pair<Op_Enum, std::string> &, const std::string &label);
     static void SetPaths();
-    static std::string label;
 
 public:
+    static std::string label;
     static std::string Trim(std::string);
     static bool success;
     static std::string aa;

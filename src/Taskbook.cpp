@@ -173,7 +173,7 @@ bool Taskbook::ManageCommand_Notebook(const std::pair<Op_Enum, std::string> &inp
         break;
 
     case Op_Enum::edit:
-        makeOperation.Edit(inputPair.second);
+        makeOperation.Edit_inNotebook(inputPair.second);
         break;
 
     case Op_Enum::star:
@@ -207,6 +207,7 @@ bool Taskbook::ManageCommand_Notebook(const std::pair<Op_Enum, std::string> &inp
     case Op_Enum::list:
     case Op_Enum::archive:
     case Op_Enum::restore:
+    case Op_Enum::move:
         fail = true;
         break;
 
@@ -262,6 +263,10 @@ void Taskbook::ManageCommand(const std::pair<Op_Enum, std::string> &inputPair)
         makeOperation.Star(inputPair.second);
         break;
 
+    case Op_Enum::move:
+        makeOperation.Move(inputPair.second);
+        break;
+
     case Op_Enum::help:
         makeOperation.Help();
         print = false;
@@ -312,47 +317,50 @@ std::pair<Op_Enum, std::string> Taskbook::ParseInput(const std::string & inputst
     parsed = Trim(parsed);
 
     cout << endl;
-    if (shortcut == "-t" || shortcut == "task")
+    if (shortcut == "t" ||shortcut == "-t" || shortcut == "task")
         operationName = Op_Enum::add;
 
-    else if (shortcut == "-d" || shortcut == "delete")
+    else if (shortcut == "d" ||shortcut == "-d" || shortcut == "delete")
         operationName = Op_Enum::remove;
 
-    else if (shortcut == "-n" || shortcut == "note")
+    else if (shortcut == "n" ||shortcut == "-n" || shortcut == "note")
         operationName = Op_Enum::add_note;
 
-    else if (shortcut == "-c" || shortcut == "check")
+    else if (shortcut == "c" ||shortcut == "-c" || shortcut == "check")
         operationName = Op_Enum::check;
 
-    else if (shortcut == "-b" || shortcut == "begin")
+    else if (shortcut == "b" ||shortcut == "-b" || shortcut == "begin")
         operationName = Op_Enum::begin;
 
-    else if (shortcut == "-e" || shortcut == "edit")
+    else if (shortcut == "e" ||shortcut == "-e" || shortcut == "edit")
         operationName = Op_Enum::edit;
 
-    else if (shortcut == "-h" || shortcut == "help")
+    else if (shortcut == "h" ||shortcut == "-h" || shortcut == "help")
         operationName = Op_Enum::help;
 
-    else if (shortcut == "-f" || shortcut == "find")
+    else if (shortcut == "f" ||shortcut == "-f" || shortcut == "find")
         operationName = Op_Enum::find;
 
-    else if (shortcut == "-a" || shortcut == "archive")
+    else if (shortcut == "a" ||shortcut == "-a" || shortcut == "archive")
         operationName = Op_Enum::archive;
 
     else if (shortcut == "sw")
         operationName = Op_Enum::sw;
 
-    else if (shortcut == "-l" || shortcut == "list")
+    else if (shortcut == "l" ||shortcut == "-l" || shortcut == "list")
         operationName = Op_Enum::list;
 
-    else if (shortcut == "-s" || shortcut == "star")
+    else if (shortcut == "s" ||shortcut == "-s" || shortcut == "star")
         operationName = Op_Enum::star;
 
-    else if (shortcut == "-r" || shortcut == "restore")
+    else if (shortcut == "r" ||shortcut == "-r" || shortcut == "restore")
         operationName = Op_Enum::restore;
 
-    else if (shortcut == "-x" || shortcut == "copy")
+    else if (shortcut == "x" ||shortcut == "-x" || shortcut == "copy")
         operationName = Op_Enum::copy;
+
+    else if (shortcut == "m" ||shortcut == "-m" || shortcut == "move")
+        operationName = Op_Enum::move;
 
     else
     {

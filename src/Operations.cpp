@@ -19,6 +19,12 @@ std::vector<Task> Operations::Tasks;
 std::vector<Task> Operations::notebookTasks;
 std::vector<Task> Operations::ArchiveTasks;
 
+bool Operations::is_number(const std::string &s)
+{
+    return !s.empty() && std::find_if(s.begin(),
+                                      s.end(), [](char c) { return !std::isdigit(c); }) == s.end();
+}
+
 int Operations::GetNewNum()
 {
     int size = Tasks.size();
@@ -196,10 +202,12 @@ void Operations::Help()
     std::cout << "       help  -h        •      Display help message\n";
     std::cout << "       list  -l        •      List items by attributes\n";
     std::cout << "       note  -n        •      Create note\n";
+    std::cout << "       move  -m        •      change name of notebooks\n";
     std::cout << "       restore  -r     •      Restore from archive\n";
     std::cout << "       star  -s        •      Star/unstar item\n";
     std::cout << "       task  -t        •      Create task\n";
     std::cout << "       copy  -x        •      Copy to clipboard\n";
+    std::cout << "       sw (label)              •      Switch notebook\n";
     std::cout << "       clear           •      Clear archive\n"
               << endl;
 }
@@ -219,7 +227,8 @@ void Operations::Help_Notebook()
     std::cout << "       note  -n        •      Create note\n";
     std::cout << "       star  -s        •      Star/unstar item\n";
     std::cout << "       task  -t        •      Create task\n";
-    std::cout << "       copy  -x        •      Copy to clipboard\n"
+    std::cout << "       copy  -x        •      Copy to clipboard\n";
+    std::cout << "       sw (label)              •      Switch notebook\n"
               << endl;
 }
 
@@ -238,7 +247,7 @@ void Operations::CopyToClipboard(std::string str)
         return;
     }
     Taskbook::success = true;
-    std::string p = "python3 /home/mert/Git/TaskIT/python/clipboard.py \"" + Operations::Tasks[vec[0] - 1].name + "\"";
+    std::string p = "echo -n \"" + Operations::Tasks[vec[0] - 1].name + "\" | xclip -selection clipboard";
     const char *proc = p.c_str();
     system(proc);
 }
@@ -272,6 +281,40 @@ void Operations::Edit(std::string str)
     }
 
     Operations::Tasks[f - Operations::Tasks.begin()].name = ss;
+    FileOperations::WriteToFile();
+}
+
+void Operations::Edit_inNotebook(std::string str)
+{
+    auto it = find_if(str.begin(), str.end(), [](char p) { return p == ' '; });
+    string temp = string(str.begin(), it);
+
+    if (temp.empty() || !all_of(temp.begin(), temp.end(), [](char p) { return isdigit(p); }))
+    {
+        Taskbook::fail = true;
+        return;
+    }
+    int num = stoi(temp);
+    auto f = find_if(Operations::notebookTasks.begin(), Operations::notebookTasks.end(), [&](Task p) { return p.number == num; });
+    if (f == Operations::notebookTasks.end())
+    {
+        Taskbook::fail = true;
+        return;
+    }
+    string ss = Taskbook::Trim(string(it, str.end()));
+    if (ss.empty())
+    {
+        Taskbook::fail = true;
+        return;
+    }
+    if (!Taskbook::fail)
+    {
+        Taskbook::success = true;
+    }
+
+    f = find_if(Operations::Tasks.begin(), Operations::Tasks.end(),
+                [&](Task p) { return p.number == num; });
+    Operations::notebookTasks[f - Operations::notebookTasks.begin()].name = ss;
     FileOperations::WriteToFile();
 }
 
@@ -345,12 +388,27 @@ void Operations::Find(const std::string &str)
     vector<Task> items;
     if (enter)
     {
-        for (auto &Task : Tasks)
+        if (Taskbook::label != "My Board")
         {
-            if (Task.name.find(str) != string::npos)
+            for (auto &Task : notebookTasks)
             {
-                items.push_back(Task);
-                Taskbook::success = true;
+                if (Task.name.find(str) != string::npos)
+                {
+                    items.push_back(Task);
+                    Taskbook::success = true;
+                }
+            }
+        }
+
+        else
+        {
+            for (auto &Task : Tasks)
+            {
+                if (Task.name.find(str) != string::npos)
+                {
+                    items.push_back(Task);
+                    Taskbook::success = true;
+                }
             }
         }
     }
@@ -434,6 +492,83 @@ void Operations::List(string str)
     Print::CountVector(Tasks);
 }
 
+void Operations::Move(std::string str)
+{
+    str = str + " ";
+    std::cout << str << std::endl;
+    std::vector<std::string> tokens;
+    std::vector<int> numbers;
+    std::__cxx11::string::iterator it;
+    while ((it = std::find(str.begin(), str.end(), ' ')) != str.end())
+    {
+        std::string temp = string(str.begin(), it);
+        std::cout << temp << std::endl;
+        str.erase(str.begin(), it + 1);
+        if (temp.empty() || std::all_of(temp.begin(), temp.end(), [](char p) { return p == ' '; }))
+        {
+            continue;
+        }
+        if (is_number(temp))
+            numbers.push_back(stoi(temp));
+        else
+            tokens.push_back(temp);
+    }
+    // std::cout  << "numbers " << std::endl;
+    // for (auto &&i : numbers)
+    // {
+    // std::cout << i << std::endl;
+    // }
+    // std::cout  << "tokens " << std::endl;
+    // for (auto &&i : tokens)
+    // {
+    // std::cout << i << std::endl;
+    // }
+
+    std::string last;
+    bool changed = false;
+    if (tokens.size() < 1)
+    {
+        Taskbook::fail = true;
+        return;
+    }
+    last = tokens[tokens.size() - 1];
+    if (numbers.size() == 0 && tokens.size() == 2)
+    {
+        auto k = Tasks.begin();
+        while ((k = std::find_if(Tasks.begin(), Tasks.end(), [&](Task p) { return p.notebook == tokens[0]; })) != Tasks.end())
+        {
+            Tasks[k - Tasks.begin()].notebook = last;
+            changed = true;
+        }
+        if (changed)
+        {
+            Taskbook::success = true;
+            FileOperations::WriteToFile();
+            return;
+        }
+    }
+    if (numbers.size() > 0 && tokens.size() == 1)
+    {
+        for (auto &&i : numbers)
+        {
+            auto k = std::find_if(Tasks.begin(), Tasks.end(), [&](Task p) { return p.number == i; });
+            if (k != Tasks.end())
+            {
+                Tasks[k - Tasks.begin()].notebook = last;
+                changed = true;
+            }
+        }
+
+        if (changed)
+        {
+            Taskbook::success = true;
+            FileOperations::WriteToFile();
+            return;
+        }
+    }
+    Taskbook::fail = true;
+}
+
 void Operations::Star(string str)
 {
     auto vec = SplitDigits(std::move(str));
@@ -472,6 +607,14 @@ void Operations::RemoveTask(string str)
     }
     for (int i : vec)
     {
+        if (Taskbook::label != "My Board")
+        {
+            auto k = find_if(Operations::notebookTasks.begin(), Operations::notebookTasks.end(), [&](Task p) { return p.number == i; });
+            if (k == Operations::notebookTasks.end())
+            {
+                continue;
+            }
+        }
         auto it = find_if(Tasks.begin(), Tasks.end(), [&](Task p) { return p.number == i; });
         if (it != Tasks.end())
         {
