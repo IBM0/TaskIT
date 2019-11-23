@@ -8,24 +8,23 @@
 #include <set>
 #include <algorithm>
 #include <iterator>
-#include "Operations.h"
+#include "MainOperations.h"
 #include "FileOperations.h"
-#include "ArchiveFileOperations.h"
 #include "pathInfo.h"
 #include "Taskbook.h"
+#include "Notebook.h"
 using namespace std;
 
-std::vector<Task> Operations::Tasks;
-std::vector<Task> Operations::notebookTasks;
-std::vector<Task> Operations::ArchiveTasks;
+std::vector<Task> MainOperations::Tasks;
+std::vector<Task> MainOperations::ArchiveTasks;
 
-bool Operations::is_number(const std::string &s)
+bool MainOperations::is_number(const std::string &s)
 {
     return !s.empty() && std::find_if(s.begin(),
                                       s.end(), [](char c) { return !std::isdigit(c); }) == s.end();
 }
 
-int Operations::GetNewNum()
+int MainOperations::GetNewNum()
 {
     int size = Tasks.size();
     int num = 1;
@@ -35,7 +34,7 @@ int Operations::GetNewNum()
     }
     return num;
 }
-int Operations::GetNewNumArchive()
+int MainOperations::GetNewNumArchive()
 {
     int size = ArchiveTasks.size();
     int num = 1;
@@ -46,14 +45,14 @@ int Operations::GetNewNumArchive()
     return num;
 }
 
-void Operations::SendToArchive(Task deletedTask)
+void MainOperations::SendToArchive(Task deletedTask)
 {
     deletedTask.number = GetNewNumArchive();
     ArchiveTasks.push_back(deletedTask);
-    ArchiveFileOperations::WriteArchive();
+    FileOperations::WriteToFile(ArchiveTasks, ArchivePath);
 }
 
-void Operations::Restore(std::string str)
+void MainOperations::Restore(std::string str)
 {
     auto vec = SplitDigits(std::move(str));
     if (vec.empty())
@@ -76,11 +75,11 @@ void Operations::Restore(std::string str)
         Taskbook::fail = true;
 
     Print::CountVector(Tasks);
-    FileOperations::WriteToFile();
-    ArchiveFileOperations::WriteArchive();
+    FileOperations::WriteToFile(Tasks, dataPath);
+    FileOperations::WriteToFile(ArchiveTasks, ArchivePath);
 }
 
-void Operations::Begin(std::string str)
+void MainOperations::Begin(std::string str)
 {
     auto vec = SplitDigits(std::move(str));
     if (vec.empty())
@@ -109,9 +108,10 @@ void Operations::Begin(std::string str)
         Taskbook::fail = true;
 
     Print::CountVector(Tasks);
-    FileOperations::WriteToFile();
+    FileOperations::WriteToFile(Tasks, dataPath);
 }
-void Operations::Check(std::string str)
+
+void MainOperations::Check(std::string str)
 {
     auto vec = SplitDigits(std::move(str));
     if (vec.empty())
@@ -146,10 +146,10 @@ void Operations::Check(std::string str)
         Taskbook::fail = true;
 
     Print::CountVector(Tasks);
-    FileOperations::WriteToFile();
+    FileOperations::WriteToFile(Tasks, dataPath);
 }
 
-std::vector<int> Operations::SplitDigits(std::string str)
+std::vector<int> MainOperations::SplitDigits(std::string str)
 {
     std::istringstream iss(str);
     vector<string> tokens{istream_iterator<string>{iss},
@@ -187,7 +187,7 @@ std::vector<int> Operations::SplitDigits(std::string str)
     return numbers;
 }
 
-void Operations::Help()
+void MainOperations::Help()
 {
     std::cout << " Usage" << endl;
     std::cout << "   Taskbook: [<options> ...]\n\n";
@@ -202,57 +202,47 @@ void Operations::Help()
     std::cout << "       help  -h        •      Display help message\n";
     std::cout << "       list  -l        •      List items by attributes\n";
     std::cout << "       note  -n        •      Create note\n";
-    std::cout << "       move  -m        •      change name of notebooks\n";
+    std::cout << "       mv  -m          •      change name of notebooks\n";
     std::cout << "       restore  -r     •      Restore from archive\n";
     std::cout << "       star  -s        •      Star/unstar item\n";
     std::cout << "       task  -t        •      Create task\n";
     std::cout << "       copy  -x        •      Copy to clipboard\n";
-    std::cout << "       sw (label)              •      Switch notebook\n";
+    std::cout << "       sw (label)      •      Switch notebook\n";
     std::cout << "       clear           •      Clear archive\n"
               << endl;
 }
 
-void Operations::Help_Notebook()
+void MainOperations::CopyToClipboard(const std::vector<Task> &vec, std::string str,const std::string & label)
 {
-    std::cout << " Usage" << endl;
-    std::cout << "   Taskbook: [<options> ...]\n\n";
-    std::cout << "   Options\n";
-    std::cout << "       none            •      Display board view\n";
-    std::cout << "       begin  -b       •      Start/pause task\n";
-    std::cout << "       check  -c       •      Check/uncheck task\n";
-    std::cout << "       delete  -d      •      Delete item\n";
-    std::cout << "       edit  -e        •      Edit item description\n";
-    std::cout << "       find  -f        •      Search for items\n";
-    std::cout << "       help  -h        •      Display help message\n";
-    std::cout << "       note  -n        •      Create note\n";
-    std::cout << "       star  -s        •      Star/unstar item\n";
-    std::cout << "       task  -t        •      Create task\n";
-    std::cout << "       copy  -x        •      Copy to clipboard\n";
-    std::cout << "       sw (label)              •      Switch notebook\n"
-              << endl;
-}
-
-void Operations::CopyToClipboard(std::string str)
-{
-    auto vec = SplitDigits(std::move(str));
-    if (vec.size() != 1)
+    auto sp = SplitDigits(std::move(str));
+    if (sp.size() != 1)
     {
         Taskbook::fail = true;
         return;
     }
-    auto f = find_if(Operations::Tasks.begin(), Operations::Tasks.end(), [&](Task p) { return p.number == vec[0]; });
-    if (f == Operations::Tasks.end())
+    int num = sp[0];
+    if (label != "My Board")
+    {
+        auto k = find_if(Notebook::notebookTasks.begin(),Notebook::notebookTasks.end(), [&](Task p) { return p.number == num; });
+        if (k==Notebook::notebookTasks.end())
+        {
+            Taskbook::fail = true;
+            return;
+        }
+    }
+    auto f = find_if(vec.begin(), vec.end(), [&](Task p) { return p.number == num; });
+    if (f == vec.end())
     {
         Taskbook::fail = true;
         return;
     }
     Taskbook::success = true;
-    std::string p = "echo -n \"" + Operations::Tasks[vec[0] - 1].name + "\" | xclip -selection clipboard";
+    std::string p = "echo -n \"" + vec[f-vec.begin()].name + "\" | xclip -selection clipboard";
     const char *proc = p.c_str();
     system(proc);
 }
 
-void Operations::Edit(std::string str)
+void MainOperations::Edit(std::string str)
 {
     auto it = find_if(str.begin(), str.end(), [](char p) { return p == ' '; });
     string temp = string(str.begin(), it);
@@ -263,8 +253,8 @@ void Operations::Edit(std::string str)
         return;
     }
     int num = stoi(temp);
-    auto f = find_if(Operations::Tasks.begin(), Operations::Tasks.end(), [&](Task p) { return p.number == num; });
-    if (f == Operations::Tasks.end())
+    auto f = find_if(MainOperations::Tasks.begin(), MainOperations::Tasks.end(), [&](Task p) { return p.number == num; });
+    if (f == MainOperations::Tasks.end())
     {
         Taskbook::fail = true;
         return;
@@ -280,45 +270,11 @@ void Operations::Edit(std::string str)
         Taskbook::success = true;
     }
 
-    Operations::Tasks[f - Operations::Tasks.begin()].name = ss;
-    FileOperations::WriteToFile();
+    MainOperations::Tasks[f - MainOperations::Tasks.begin()].name = ss;
+    FileOperations::WriteToFile(Tasks, dataPath);
 }
 
-void Operations::Edit_inNotebook(std::string str)
-{
-    auto it = find_if(str.begin(), str.end(), [](char p) { return p == ' '; });
-    string temp = string(str.begin(), it);
-
-    if (temp.empty() || !all_of(temp.begin(), temp.end(), [](char p) { return isdigit(p); }))
-    {
-        Taskbook::fail = true;
-        return;
-    }
-    int num = stoi(temp);
-    auto f = find_if(Operations::notebookTasks.begin(), Operations::notebookTasks.end(), [&](Task p) { return p.number == num; });
-    if (f == Operations::notebookTasks.end())
-    {
-        Taskbook::fail = true;
-        return;
-    }
-    string ss = Taskbook::Trim(string(it, str.end()));
-    if (ss.empty())
-    {
-        Taskbook::fail = true;
-        return;
-    }
-    if (!Taskbook::fail)
-    {
-        Taskbook::success = true;
-    }
-
-    f = find_if(Operations::Tasks.begin(), Operations::Tasks.end(),
-                [&](Task p) { return p.number == num; });
-    Operations::notebookTasks[f - Operations::notebookTasks.begin()].name = ss;
-    FileOperations::WriteToFile();
-}
-
-void Operations::AddTask(const std::string &taskName, TaskStat_Enum stat, const std::string &label)
+void MainOperations::AddTask(const std::string &taskName, TaskStat_Enum stat, const std::string &label)
 {
     if (taskName.empty())
     {
@@ -363,10 +319,10 @@ void Operations::AddTask(const std::string &taskName, TaskStat_Enum stat, const 
     Tasks.push_back(newTask);
     Taskbook::success = true;
     Print::CountVector(Tasks);
-    FileOperations::WriteToFile();
+    FileOperations::WriteToFile(Tasks, dataPath);
 }
 
-void Operations::Clear()
+void MainOperations::Clear()
 {
     ofstream file(ArchivePath);
     ArchiveTasks.clear();
@@ -375,10 +331,10 @@ void Operations::Clear()
         Tasks[i].number = i + 1;
     }
     Taskbook::success = true;
-    FileOperations::WriteToFile();
+    FileOperations::WriteToFile(Tasks, dataPath);
 }
 
-void Operations::Find(const std::string &str)
+void MainOperations::Find(const vector<Task> &vec, const std::string &str)
 {
     bool enter = true;
     if (str.empty())
@@ -388,27 +344,12 @@ void Operations::Find(const std::string &str)
     vector<Task> items;
     if (enter)
     {
-        if (Taskbook::label != "My Board")
+        for (auto &Task : vec)
         {
-            for (auto &Task : notebookTasks)
+            if (Task.name.find(str) != string::npos)
             {
-                if (Task.name.find(str) != string::npos)
-                {
-                    items.push_back(Task);
-                    Taskbook::success = true;
-                }
-            }
-        }
-
-        else
-        {
-            for (auto &Task : Tasks)
-            {
-                if (Task.name.find(str) != string::npos)
-                {
-                    items.push_back(Task);
-                    Taskbook::success = true;
-                }
+                items.push_back(Task);
+                Taskbook::success = true;
             }
         }
     }
@@ -425,7 +366,7 @@ void Operations::Find(const std::string &str)
     std::cout << endl;
 }
 
-set<string> Operations::NotebookSplit(string str)
+set<string> MainOperations::NotebookSplit(string str)
 {
     vector<std::string> items;
     auto pos = str.begin();
@@ -455,7 +396,7 @@ set<string> Operations::NotebookSplit(string str)
     return myset;
 }
 
-void Operations::IterateNotebooks(const std::set<std::string> &myset)
+void MainOperations::IterateNotebooks(const std::set<std::string> &myset)
 {
     for (auto &&i : myset)
     {
@@ -467,7 +408,14 @@ void Operations::IterateNotebooks(const std::set<std::string> &myset)
     }
 }
 
-void Operations::List(string str)
+void MainOperations::AllNotebooks()
+{
+    std::set<std::string> myset;
+    std::transform(Tasks.begin(), Tasks.end(), inserter(myset, myset.begin()), [](Task p) { return p.notebook; });
+    Print::PrintNotebooks(myset);
+}
+
+void MainOperations::List(string str)
 {
     if (str.empty())
     {
@@ -492,17 +440,15 @@ void Operations::List(string str)
     Print::CountVector(Tasks);
 }
 
-void Operations::Move(std::string str)
+void MainOperations::Move(std::string str)
 {
     str = str + " ";
-    std::cout << str << std::endl;
     std::vector<std::string> tokens;
     std::vector<int> numbers;
     std::__cxx11::string::iterator it;
     while ((it = std::find(str.begin(), str.end(), ' ')) != str.end())
     {
         std::string temp = string(str.begin(), it);
-        std::cout << temp << std::endl;
         str.erase(str.begin(), it + 1);
         if (temp.empty() || std::all_of(temp.begin(), temp.end(), [](char p) { return p == ' '; }))
         {
@@ -513,16 +459,6 @@ void Operations::Move(std::string str)
         else
             tokens.push_back(temp);
     }
-    // std::cout  << "numbers " << std::endl;
-    // for (auto &&i : numbers)
-    // {
-    // std::cout << i << std::endl;
-    // }
-    // std::cout  << "tokens " << std::endl;
-    // for (auto &&i : tokens)
-    // {
-    // std::cout << i << std::endl;
-    // }
 
     std::string last;
     bool changed = false;
@@ -543,7 +479,7 @@ void Operations::Move(std::string str)
         if (changed)
         {
             Taskbook::success = true;
-            FileOperations::WriteToFile();
+            FileOperations::WriteToFile(Tasks, dataPath);
             return;
         }
     }
@@ -562,21 +498,25 @@ void Operations::Move(std::string str)
         if (changed)
         {
             Taskbook::success = true;
-            FileOperations::WriteToFile();
+            FileOperations::WriteToFile(Tasks, dataPath);
             return;
         }
     }
     Taskbook::fail = true;
 }
 
-void Operations::Star(string str)
+void MainOperations::Star(string str, vector<int> vec)
 {
-    auto vec = SplitDigits(std::move(str));
     if (vec.empty())
     {
-        Taskbook::fail = true;
-        return;
+        vec = SplitDigits(std::move(str));
+        if (vec.empty())
+        {
+            Taskbook::fail = true;
+            return;
+        }
     }
+    
     for (auto &&i : vec)
     {
         auto it = find_if(Tasks.begin(), Tasks.end(), [&](Task p) { return p.number == i; });
@@ -594,10 +534,10 @@ void Operations::Star(string str)
             Taskbook::success = true;
         }
     }
-    FileOperations::WriteToFile();
+    FileOperations::WriteToFile(Tasks, dataPath);
 }
 
-void Operations::RemoveTask(string str)
+void MainOperations::RemoveTask(string str,const std::string & label)
 {
     auto vec = SplitDigits(std::move(str));
     if (vec.empty())
@@ -607,13 +547,16 @@ void Operations::RemoveTask(string str)
     }
     for (int i : vec)
     {
-        if (Taskbook::label != "My Board")
+        if (label != "My Board")
         {
-            auto k = find_if(Operations::notebookTasks.begin(), Operations::notebookTasks.end(), [&](Task p) { return p.number == i; });
-            if (k == Operations::notebookTasks.end())
+            auto k = find_if(Notebook::notebookTasks.begin(), Notebook::notebookTasks.end(), [&](Task p) { return p.number == i; });
+            if (k != Notebook::notebookTasks.end())
             {
-                continue;
+                Notebook::notebookTasks.erase(k, k + 1);
+                Taskbook::success = true;
             }
+            else
+                continue;
         }
         auto it = find_if(Tasks.begin(), Tasks.end(), [&](Task p) { return p.number == i; });
         if (it != Tasks.end())
@@ -629,5 +572,5 @@ void Operations::RemoveTask(string str)
     }
 
     Print::CountVector(Tasks);
-    FileOperations::WriteToFile();
+    FileOperations::WriteToFile(Tasks, dataPath);
 }

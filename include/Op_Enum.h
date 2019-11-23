@@ -14,6 +14,7 @@ enum class Op_Enum
     help,
     begin,
     add_note,
+    list_o,
     remove,
     list,
     archive,

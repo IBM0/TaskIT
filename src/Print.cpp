@@ -1,4 +1,4 @@
-#include "Operations.h"
+#include "MainOperations.h"
 #include <vector>
 #include <iostream>
 #include <algorithm>
@@ -20,21 +20,16 @@ void Print::CountVector(const vector<Task> &vec)
     for (auto &Task : vec)
     {
         if (Task.stat == TaskStat_Enum::done)
-        {
             doneCount++;
-        }
+
         else if (Task.stat == TaskStat_Enum::undone)
-        {
             undoneCount++;
-        }
+
         else if (Task.stat == TaskStat_Enum::note)
-        {
             note++;
-        }
+
         else if (Task.stat == TaskStat_Enum::inprogress)
-        {
             inprogress++;
-        }
     }
     size = doneCount + undoneCount + inprogress;
 }
@@ -45,13 +40,10 @@ void Print::PrintBody(const std::vector<Task> &vec, bool isprint)
     {
         bool st = false;
         if (i.starred)
-        {
             st = true;
-        }
 
         if (i.stat == TaskStat_Enum::done)
         {
-
             cout << "    " << gray << i.number << "." << reset
                  << boldyellow << " ✔  " << reset << gray << i.name << reset;
         }
@@ -83,6 +75,18 @@ void Print::PrintBody(const std::vector<Task> &vec, bool isprint)
     }
 }
 
+void Print::PrintNotebooks(std::set<std::string> & a)
+{
+    for (auto &&i : a)
+    {
+        cout << boldred << " ♥ ";
+        cout << underLinemagenta
+        << i << reset << "   "; 
+
+    }
+    std::cout << "\n"<< std::endl;
+}
+
 void Print::PrintTasks(const std::vector<Task> &vec, bool isprint = true, std::string name = "My Board")
 {
     int percent = 0;
@@ -96,7 +100,6 @@ void Print::PrintTasks(const std::vector<Task> &vec, bool isprint = true, std::s
          << name << reset << gray << " [" << doneCount << "/" << size << "]" << reset << endl;
 
     PrintBody(vec, isprint);
-
 
     cout << "\n " << gray << percent << "% of all tasks completed\n"
          << reset;
@@ -113,6 +116,6 @@ void Print::PrintArchive()
     cout << boldred << " ネ" << underLinemagenta
          << "Archive" << reset << endl;
 
-    PrintBody(Operations::ArchiveTasks, true);
+    PrintBody(MainOperations::ArchiveTasks, true);
     cout << endl;
 }

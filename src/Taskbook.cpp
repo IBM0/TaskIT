@@ -4,10 +4,9 @@
 #include "Color.h"
 #include <fstream>
 #include "Taskbook.h"
-#include "Operations.h"
+#include "MainOperations.h"
 #include "FileOperations.h"
 #include "pathInfo.h"
-#include "ArchiveFileOperations.h"
 #include <unistd.h>
 #include "Notebook.h"
 using namespace std;
@@ -33,7 +32,7 @@ void Taskbook::ManageTaskbook(const std::string argv) // notebook version
 {
     label = argv;
     Notebook::ReadLabel(label);
-    Print::CountVector(Operations::notebookTasks);
+    Print::CountVector(Notebook::notebookTasks);
 
     while (true)
     {
@@ -42,7 +41,7 @@ void Taskbook::ManageTaskbook(const std::string argv) // notebook version
 
         if (print)
         {
-            Print::PrintTasks(Operations::notebookTasks, false, label);
+            Print::PrintTasks(Notebook::notebookTasks, false, label);
         }
         input = TakeInput();
         if (input == "")
@@ -65,7 +64,7 @@ void Taskbook::ManageTaskbook(const std::string argv) // notebook version
             if (ManageCommand_Notebook(inputPair, label))
             {
                 Notebook::ReadLabel(label);
-                Print::CountVector(Operations::notebookTasks);
+                Print::CountVector(Notebook::notebookTasks);
             }
             if (!fall_back.empty())
             {
@@ -78,13 +77,13 @@ void Taskbook::ManageTaskbook(const std::string argv) // notebook version
 void Taskbook::Startexe()
 {
     SetPaths();
-    FileOperations::ReadFromFile();
-    ArchiveFileOperations::ReadArchive();
+    FileOperations::ReadFromFile(MainOperations::Tasks,dataPath);
+    FileOperations::ReadFromFile(MainOperations::ArchiveTasks,ArchivePath);
 }
 
 void Taskbook::ManageTaskbook()
 {
-    Print::CountVector(Operations::Tasks);
+    Print::CountVector(MainOperations::Tasks);
     while (true)
     {
         pair<Op_Enum, string> inputPair;
@@ -92,7 +91,7 @@ void Taskbook::ManageTaskbook()
 
         if (print)
         {
-            Print::PrintTasks(Operations::Tasks, true, "My Board");
+            Print::PrintTasks(MainOperations::Tasks, true, "My Board");
         }
         input = TakeInput();
         if (input == "")
@@ -109,7 +108,7 @@ void Taskbook::ManageTaskbook()
         }
 
         if (input == "clear")
-            Operations::Clear();
+            MainOperations::Clear();
 
         print = true;
         inputPair = ParseInput(input);
@@ -149,48 +148,56 @@ std::string Taskbook::TakeInput()
 
 bool Taskbook::ManageCommand_Notebook(const std::pair<Op_Enum, std::string> &inputPair, const std::string &label)
 {
-    Operations makeOperation;
+    // MainOperations makeOperation;
     switch (inputPair.first)
     {
     case Op_Enum::add:
-        makeOperation.AddTask(inputPair.second, TaskStat_Enum::undone, label);
+        MainOperations::AddTask(inputPair.second, TaskStat_Enum::undone, label);
         break;
 
     case Op_Enum::add_note:
-        makeOperation.AddTask(inputPair.second, TaskStat_Enum::note, label);
+        MainOperations::AddTask(inputPair.second, TaskStat_Enum::note, label);
+        break;
+
+    case Op_Enum::list_o:
+        MainOperations::AllNotebooks();
+        print = false;
         break;
 
     case Op_Enum::check:
-        makeOperation.Check(inputPair.second);
+        MainOperations::Check(inputPair.second);
+        Notebook::ReadLabel(label);
         break;
 
     case Op_Enum::begin:
-        makeOperation.Begin(inputPair.second);
+        MainOperations::Begin(inputPair.second);
+        Notebook::ReadLabel(label);
         break;
 
     case Op_Enum::remove:
-        makeOperation.RemoveTask(inputPair.second);
+        MainOperations::RemoveTask(inputPair.second, label);
         break;
 
     case Op_Enum::edit:
-        makeOperation.Edit_inNotebook(inputPair.second);
+        Notebook::Edit(inputPair.second);
         break;
 
     case Op_Enum::star:
-        makeOperation.Star(inputPair.second);
+        Notebook::Star(inputPair.second);
+        Notebook::ReadLabel(label);
         break;
 
     case Op_Enum::help:
-        makeOperation.Help_Notebook();
+        Notebook::Help_Notebook();
         print = false;
         return false;
 
     case Op_Enum::copy:
-        makeOperation.CopyToClipboard(inputPair.second);
+        MainOperations::CopyToClipboard(Notebook::notebookTasks,inputPair.second,"");
         return false;
 
     case Op_Enum::find:
-        makeOperation.Find(inputPair.second);
+        MainOperations::Find(Notebook::notebookTasks,inputPair.second);
         print = false;
         return false;
 
@@ -219,11 +226,15 @@ bool Taskbook::ManageCommand_Notebook(const std::pair<Op_Enum, std::string> &inp
 
 void Taskbook::ManageCommand(const std::pair<Op_Enum, std::string> &inputPair)
 {
-    Operations makeOperation;
     switch (inputPair.first)
     {
     case Op_Enum::add:
-        makeOperation.AddTask(inputPair.second, TaskStat_Enum::undone);
+        MainOperations::AddTask(inputPair.second, TaskStat_Enum::undone,label);
+        break;
+
+    case Op_Enum::list_o:
+        MainOperations::AllNotebooks();
+        print = false;
         break;
 
     case Op_Enum::sw:
@@ -231,49 +242,49 @@ void Taskbook::ManageCommand(const std::pair<Op_Enum, std::string> &inputPair)
         break;
 
     case Op_Enum::add_note:
-        makeOperation.AddTask(inputPair.second, TaskStat_Enum::note);
+        MainOperations::AddTask(inputPair.second, TaskStat_Enum::note,label);
         break;
 
     case Op_Enum::check:
-        makeOperation.Check(inputPair.second);
+        MainOperations::Check(inputPair.second);
         break;
 
     case Op_Enum::begin:
-        makeOperation.Begin(inputPair.second);
+        MainOperations::Begin(inputPair.second);
         break;
 
     case Op_Enum::remove:
-        makeOperation.RemoveTask(inputPair.second);
+        MainOperations::RemoveTask(inputPair.second,"My Board");
         break;
 
     case Op_Enum::edit:
-        makeOperation.Edit(inputPair.second);
+        MainOperations::Edit(inputPair.second);
         break;
 
     case Op_Enum::clear:
-        makeOperation.Clear();
+        MainOperations::Clear();
         break;
 
     case Op_Enum::list:
         print = false;
-        makeOperation.List(inputPair.second);
+        MainOperations::List(inputPair.second);
         break;
 
     case Op_Enum::star:
-        makeOperation.Star(inputPair.second);
+        MainOperations::Star(inputPair.second,{});
         break;
 
     case Op_Enum::move:
-        makeOperation.Move(inputPair.second);
+        MainOperations::Move(inputPair.second);
         break;
 
     case Op_Enum::help:
-        makeOperation.Help();
+        MainOperations::Help();
         print = false;
         break;
 
     case Op_Enum::copy:
-        makeOperation.CopyToClipboard(inputPair.second);
+        MainOperations::CopyToClipboard(MainOperations::Tasks,inputPair.second,"My Board");
         break;
 
     case Op_Enum::archive:
@@ -282,12 +293,12 @@ void Taskbook::ManageCommand(const std::pair<Op_Enum, std::string> &inputPair)
         break;
 
     case Op_Enum::restore:
-        makeOperation.Restore(inputPair.second);
+        MainOperations::Restore(inputPair.second);
         break;
 
     case Op_Enum::find:
         print = false;
-        makeOperation.Find(inputPair.second);
+        MainOperations::Find(MainOperations::Tasks,inputPair.second);
         break;
 
     case Op_Enum::Nil:
@@ -335,6 +346,9 @@ std::pair<Op_Enum, std::string> Taskbook::ParseInput(const std::string & inputst
     else if (shortcut == "e" ||shortcut == "-e" || shortcut == "edit")
         operationName = Op_Enum::edit;
 
+    else if (shortcut == "o" ||shortcut == "-o" || shortcut == "all")
+        operationName = Op_Enum::list_o;
+
     else if (shortcut == "h" ||shortcut == "-h" || shortcut == "help")
         operationName = Op_Enum::help;
 
@@ -359,7 +373,7 @@ std::pair<Op_Enum, std::string> Taskbook::ParseInput(const std::string & inputst
     else if (shortcut == "x" ||shortcut == "-x" || shortcut == "copy")
         operationName = Op_Enum::copy;
 
-    else if (shortcut == "m" ||shortcut == "-m" || shortcut == "move")
+    else if (shortcut == "m" ||shortcut == "-m" || shortcut == "mv")
         operationName = Op_Enum::move;
 
     else
